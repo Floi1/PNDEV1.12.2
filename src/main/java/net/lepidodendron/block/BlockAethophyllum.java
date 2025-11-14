@@ -5,7 +5,9 @@ import net.lepidodendron.*;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.EnumBiomeTypeTriassic;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.triassic.BiomeTriassic;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockReed;
 import net.minecraft.block.SoundType;
@@ -91,7 +93,7 @@ public class BlockAethophyllum extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genAethophyllumBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.PLAINS))
 				biomeCriteria = true;
@@ -113,12 +115,14 @@ public class BlockAethophyllum extends ElementsLepidodendronMod.ModElement {
 		if (matchBiome(biome, LepidodendronConfigPlants.genAethophyllumOverrideBiomes))
 			biomeCriteria = true;
 
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_xeric_scrubland")
-			|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_warm_lakeland"))
-			biomeCriteria = true;
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_woodland"))
-			biomeCriteria = false;
+		if (biome instanceof BiomeTriassic) {
+			if (((BiomeTriassic)biome).getBiomeType() == EnumBiomeTypeTriassic.Europe) {
+				biomeCriteria = true;
+			}
+			else {
+				biomeCriteria = false;
+			}
+		}
 
 		if (!biomeCriteria)
 			return;
@@ -129,10 +133,11 @@ public class BlockAethophyllum extends ElementsLepidodendronMod.ModElement {
 		GenChance = Math.min(15, (int) Math.round((double) GenChance * GenMultiplier));
 		//Is this a transformed biome?
 		if (LepidodendronDecorationHandler.matchBiome(biome, LepidodendronConfigPlants.genTransformBiomes)) {
-			//if (biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":")).equalsIgnoreCase("minecraft"))
-				GenChance = 15;
+			GenChance = 15;
 		}
-
+		if (biome instanceof BiomeTriassic) {
+			GenChance = 15;
+		}
 		int maxheight = LepidodendronConfigPlants.maxheightAethophyllum;
 		int minheight = LepidodendronConfigPlants.minheightAethophyllum;
 		if (maxheight < 0) {maxheight = 0;}
@@ -333,7 +338,7 @@ public class BlockAethophyllum extends ElementsLepidodendronMod.ModElement {
 				tooltip.add("Type: Coniferous shrub");
 				tooltip.add("Periods: Triassic");
 				tooltip.add("Note: An unusual herbaceous conifer");
-				tooltip.add("Propagation: fruit/cone");
+				tooltip.add("Propagation: Fruit/Cone");
 			}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }

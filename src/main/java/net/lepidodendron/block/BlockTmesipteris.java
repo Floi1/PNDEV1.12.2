@@ -85,7 +85,7 @@ public class BlockTmesipteris extends ElementsLepidodendronMod.ModElement {
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {		
 			
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genTmesipterisBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE))
 				biomeCriteria = true;
@@ -131,7 +131,10 @@ public class BlockTmesipteris extends ElementsLepidodendronMod.ModElement {
 		if (biome instanceof BiomeTriassic)
 		{
 			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Warm
+			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.CentralAfricaIndia
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Europe
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.USAGreenland
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.China
 				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.River) {
 				biomeCriteria = true;
 			}
@@ -442,8 +445,8 @@ public class BlockTmesipteris extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Fern epiphytic plant");
-	        tooltip.add("Periods: Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene [- Present]");
-	        tooltip.add("Propagation: spores");}
+	        tooltip.add("Periods: Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+	        tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

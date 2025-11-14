@@ -10,6 +10,7 @@ import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
 import net.lepidodendron.util.ModTriggers;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -41,6 +42,7 @@ import net.minecraft.world.gen.feature.WorldGenReed;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -95,7 +97,7 @@ public class BlockNereocystisKelp extends ElementsLepidodendronMod.ModElement {
 		}
 		
 		boolean dimensionCriteria = false;
-		if (shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimAlgae))
+		if (shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimModernSeaBlockLife))
 			dimensionCriteria = true;
 		if (!dimensionCriteria || dimID == LepidodendronConfig.dimPrecambrian
 				|| dimID == LepidodendronConfig.dimCambrian
@@ -112,7 +114,7 @@ public class BlockNereocystisKelp extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genNereocystisBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -340,14 +342,14 @@ public class BlockNereocystisKelp extends ElementsLepidodendronMod.ModElement {
 		}
 
 		public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	    
 	    @SideOnly(Side.CLIENT)
@@ -356,7 +358,7 @@ public class BlockNereocystisKelp extends ElementsLepidodendronMod.ModElement {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Marine Algae");
 	        tooltip.add("Periods: Neogene - Pleistocene - present");
-	        tooltip.add("Propagation: water");}
+	        tooltip.add("Propagation: Water");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 	}

@@ -4,6 +4,7 @@ package net.lepidodendron.entity;
 import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
 import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronMod;
+import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.entity.ai.DietString;
 import net.lepidodendron.entity.ai.EatItemsEntityPrehistoricFloraAgeableBaseAI;
 import net.lepidodendron.entity.ai.EntityMateAIAgeableBase;
@@ -12,6 +13,9 @@ import net.lepidodendron.entity.base.EntityPrehistoricFloraNautiloidBase;
 import net.lepidodendron.entity.util.EnumCreatureAttributePN;
 import net.lepidodendron.entity.util.ITrappableWater;
 import net.lepidodendron.item.entities.ItemNautiloidEggsCameroceras;
+import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.ModTriggers;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -26,19 +30,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class EntityPrehistoricFloraCameroceras extends EntityPrehistoricFloraNautiloidBase implements ITrappableWater {
+public class EntityPrehistoricFloraCameroceras extends EntityPrehistoricFloraNautiloidBase implements ITrappableWater, IAdvancementGranter {
 
 	public BlockPos currentTarget;
 	@SideOnly(Side.CLIENT)
 	public ChainBuffer chainBuffer;
+	@SideOnly(Side.CLIENT)
+	public float bodyAngle;
 
 	public EntityPrehistoricFloraCameroceras(World world) {
 		super(world);
-		setSize(1.5F, 1.5F);
+		setSize(0.9F, 0.9F);
 		minWidth = 0.1F;
-		maxWidth = 1.5F;
-		maxHeight = 1.5F;
-		maxHealthAgeable = 32;
+		maxWidth = 0.9F;
+		maxHeight = 0.9F;
+		maxHealthAgeable = 14;
 	}
 
 	@Override
@@ -60,9 +66,16 @@ public class EntityPrehistoricFloraCameroceras extends EntityPrehistoricFloraNau
 		return this.getAgeScale() < 0.2;
 	}
 
-	public static String getPeriod() {return "Ordovician - [Silurian]";}
+	public static String getPeriod() {return "Ordovician [ - Silurian]";}
 
-	//public static String getHabitat() {return "Aquatic";}
+	public boolean canBeVertical() {
+		//isReally in Water
+		boolean check1 = this.isReallyInWater();
+		int waterTest = Math.round(3 * this.getAgeScale());
+		boolean check2 = this.world.getBlockState(this.getPosition().up(waterTest)).getMaterial() != Material.WATER;
+
+		return check1 && !check2;
+	}
 
 	@Override
 	public boolean dropsEggs() {
@@ -81,7 +94,7 @@ public class EntityPrehistoricFloraCameroceras extends EntityPrehistoricFloraNau
 
 	@Override
 	protected float getAISpeedNautiloid() {
-		return 0.1f;
+		return 0.05f;
 	}
 
 	protected void initEntityAI() {
@@ -133,6 +146,20 @@ public class EntityPrehistoricFloraCameroceras extends EntityPrehistoricFloraNau
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		//this.renderYawOffset = this.rotationYaw;
+		if (this.world.isRemote) {
+			if (this.canBeVertical()) {
+				this.bodyAngle ++;
+			}
+			else {
+				this.bodyAngle --;
+			}
+			if (this.bodyAngle > 90) {
+				this.bodyAngle = 90;
+			}
+			if (this.bodyAngle < 0) {
+				this.bodyAngle = 0;
+			}
+		}
 		if (this.isEntityAlive() && isInWater()) {
 			if (this.isAtBottom()) {
 				//Feeding from bottom pose:
@@ -163,4 +190,9 @@ public class EntityPrehistoricFloraCameroceras extends EntityPrehistoricFloraNau
 		return LepidodendronMod.CAMEROCERAS_LOOT;
 	}
 
+	@Nullable
+	@Override
+	public CustomTrigger getModTrigger() {
+		return ModTriggers.CLICK_CAMEROCERAS;
+	}
 }

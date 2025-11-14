@@ -4,6 +4,7 @@ package net.lepidodendron.world.structure;
 import net.lepidodendron.ElementsLepidodendronMod;
 import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.block.*;
+import net.lepidodendron.entity.EntityVolcano;
 import net.lepidodendron.util.Functions;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -28,6 +29,8 @@ public class StructureSpawnCambrianVolcano extends ElementsLepidodendronMod.ModE
 			return;
 		Biome biome = world.getBiome(new BlockPos(i2, world.getSeaLevel(), k2));
 		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cambrian_sea"))
+			return;
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cambrian_abyssal"))
 			return;
 
 		//int GenChance = 4000;
@@ -57,7 +60,7 @@ public class StructureSpawnCambrianVolcano extends ElementsLepidodendronMod.ModE
 					return;
 
 				BlockPos startpos = new BlockPos(i, j + 1, k);
-				int coneRadius = random.nextInt(60) + 30;
+				int coneRadius = random.nextInt(60) + 50;
 
 				//if (!world.canSeeSky(pos.add(0, (coneRadius-coneHeight) - lavaRadius, 0))) {
 				//	return;
@@ -167,6 +170,10 @@ public class StructureSpawnCambrianVolcano extends ElementsLepidodendronMod.ModE
 					while (zct <= radiusLake) {
 						if ((Math.pow((int) xct, 2) + Math.pow((int) zct, 2)) <= Math.pow((int) radiusLake, 2)) {
 							Functions.setBlockStateAndCheckForDoublePlant(world,posLake.add(xct, yct + 33, zct), Blocks.FLOWING_LAVA.getDefaultState(), 3);
+							if (world.rand.nextInt(240) == 0) {
+								EntityVolcano volcanoEntity = new EntityVolcano(world, posLake.add(xct, yct + 33, zct));
+								world.spawnEntity(volcanoEntity);
+							}
 						}
 						zct +=1;
 					}

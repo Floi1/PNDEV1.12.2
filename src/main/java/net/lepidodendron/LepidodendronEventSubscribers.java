@@ -3,21 +3,19 @@ package net.lepidodendron;
 import net.lepidodendron.block.*;
 import net.lepidodendron.entity.EntityPrehistoricFloraGuanoBall;
 import net.lepidodendron.entity.EntityPrehistoricFloraMeteor;
-import net.lepidodendron.entity.base.EntityPrehistoricFloraAgeableBase;
 import net.lepidodendron.entity.boats.PrehistoricFloraSubmarine;
 import net.lepidodendron.entity.render.tile.RenderDisplayWallMount;
+import net.lepidodendron.entity.util.*;
 import net.lepidodendron.item.*;
 import net.lepidodendron.item.entities.ItemBugRaw;
 import net.lepidodendron.item.entities.ItemPNTaxidermyItem;
-import net.lepidodendron.util.EnumBiomeTypePrecambrian;
-import net.lepidodendron.util.Functions;
-import net.lepidodendron.util.ModTriggers;
-import net.lepidodendron.util.patchouli.PercentageCollected;
+import net.lepidodendron.util.*;
 import net.lepidodendron.world.WorldOverworldPortal;
 import net.lepidodendron.world.biome.FishingRodDrops;
 import net.lepidodendron.world.biome.precambrian.BiomePrecambrian;
-import net.minecraft.block.BlockSapling;
+import net.lepidodendron.world.gen.WorldGenVolcanoEruptableNether;
 import net.minecraft.block.*;
+import net.minecraft.block.BlockSapling;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -63,14 +61,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -97,6 +96,7 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -107,6 +107,68 @@ public class LepidodendronEventSubscribers {
 	public static ArrayList<Meteor> meteors = new ArrayList();
 	public static ArrayList<Meteor> fragments = new ArrayList();
 	public static ArrayList<Meteor> smoke = new ArrayList();
+	public static final ResourceLocation PALEOPEDIA_PRECAMBRIAN_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_precambrian");
+	public static final ResourceLocation PALEOPEDIA_PRECAMBRIAN_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_precambrian_completed");
+	public static final ResourceLocation PALEOPEDIA_CAMBRIAN_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_cambrian");
+	public static final ResourceLocation PALEOPEDIA_CAMBRIAN_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_cambrian_completed");
+	public static final ResourceLocation PALEOPEDIA_ORDOVICIAN_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_ordovician");
+	public static final ResourceLocation PALEOPEDIA_ORDOVICIAN_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_ordovician_completed");
+	public static final ResourceLocation PALEOPEDIA_SILURIAN_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_silurian");
+	public static final ResourceLocation PALEOPEDIA_SILURIAN_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_silurian_completed");
+	public static final ResourceLocation PALEOPEDIA_DEVONIAN_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_devonian");
+	public static final ResourceLocation PALEOPEDIA_DEVONIAN_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_devonian_completed");
+	public static final ResourceLocation PALEOPEDIA_CARBONIFEROUS_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_carboniferous");
+	public static final ResourceLocation PALEOPEDIA_CARBONIFEROUS_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_carboniferous_completed");
+	public static final ResourceLocation PALEOPEDIA_PERMIAN_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_permian");
+	public static final ResourceLocation PALEOPEDIA_PERMIAN_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_permian_completed");
+	public static final ResourceLocation PALEOPEDIA_TRIASSIC_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_triassic");
+	public static final ResourceLocation PALEOPEDIA_TRIASSIC_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_triassic_completed");
+	public static final ResourceLocation PALEOPEDIA_JURASSIC_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_jurassic");
+	public static final ResourceLocation PALEOPEDIA_JURASSIC_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_jurassic_completed");
+	public static final ResourceLocation PALEOPEDIA_CRETACEOUS_EARLY_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_cretaceous_early");
+	public static final ResourceLocation PALEOPEDIA_CRETACEOUS_EARLY_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_cretaceous_early_completed");
+	public static final ResourceLocation PALEOPEDIA_CRETACEOUS_LATE_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_cretaceous_late");
+	public static final ResourceLocation PALEOPEDIA_CRETACEOUS_LATE_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_cretaceous_late_completed");
+	public static final ResourceLocation PALEOPEDIA_PALEOGENE_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_paleogene");
+	public static final ResourceLocation PALEOPEDIA_PALEOGENE_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_paleogene_completed");
+	public static final ResourceLocation PALEOPEDIA_NEOGENE_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_neogene");
+	public static final ResourceLocation PALEOPEDIA_NEOGENE_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_neogene_completed");
+	public static final ResourceLocation PALEOPEDIA_PLEISTOCENE_STATS = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_pleistocene");
+	public static final ResourceLocation PALEOPEDIA_PLEISTOCENE_STATS_COMPLETED = new ResourceLocation(LepidodendronMod.MODID, "paleopediastats_pleistocene_completed");
+
+	@SubscribeEvent
+	public void attachCapability(AttachCapabilitiesEvent event) {
+		if (event.getObject() instanceof EntityPlayer) {
+			event.addCapability(PALEOPEDIA_PRECAMBRIAN_STATS, new PaleopediaStatsProviderPrecambrian());
+			event.addCapability(PALEOPEDIA_PRECAMBRIAN_STATS_COMPLETED, new PaleopediaStatsProviderPrecambrianCompleted());
+			event.addCapability(PALEOPEDIA_CAMBRIAN_STATS, new PaleopediaStatsProviderCambrian());
+			event.addCapability(PALEOPEDIA_CAMBRIAN_STATS_COMPLETED, new PaleopediaStatsProviderCambrianCompleted());
+			event.addCapability(PALEOPEDIA_ORDOVICIAN_STATS, new PaleopediaStatsProviderOrdovician());
+			event.addCapability(PALEOPEDIA_ORDOVICIAN_STATS_COMPLETED, new PaleopediaStatsProviderOrdovicianCompleted());
+			event.addCapability(PALEOPEDIA_SILURIAN_STATS, new PaleopediaStatsProviderSilurian());
+			event.addCapability(PALEOPEDIA_SILURIAN_STATS_COMPLETED, new PaleopediaStatsProviderSilurianCompleted());
+			event.addCapability(PALEOPEDIA_DEVONIAN_STATS, new PaleopediaStatsProviderDevonian());
+			event.addCapability(PALEOPEDIA_DEVONIAN_STATS_COMPLETED, new PaleopediaStatsProviderDevonianCompleted());
+			event.addCapability(PALEOPEDIA_CARBONIFEROUS_STATS, new PaleopediaStatsProviderCarboniferous());
+			event.addCapability(PALEOPEDIA_CARBONIFEROUS_STATS_COMPLETED, new PaleopediaStatsProviderCarboniferousCompleted());
+			event.addCapability(PALEOPEDIA_PERMIAN_STATS, new PaleopediaStatsProviderPermian());
+			event.addCapability(PALEOPEDIA_PERMIAN_STATS_COMPLETED, new PaleopediaStatsProviderPermianCompleted());
+			event.addCapability(PALEOPEDIA_TRIASSIC_STATS, new PaleopediaStatsProviderTriassic());
+			event.addCapability(PALEOPEDIA_TRIASSIC_STATS_COMPLETED, new PaleopediaStatsProviderTriassicCompleted());
+			event.addCapability(PALEOPEDIA_JURASSIC_STATS, new PaleopediaStatsProviderJurassic());
+			event.addCapability(PALEOPEDIA_JURASSIC_STATS_COMPLETED, new PaleopediaStatsProviderJurassicCompleted());
+			event.addCapability(PALEOPEDIA_CRETACEOUS_EARLY_STATS, new PaleopediaStatsProviderCretaceousEarly());
+			event.addCapability(PALEOPEDIA_CRETACEOUS_EARLY_STATS_COMPLETED, new PaleopediaStatsProviderCretaceousEarlyCompleted());
+			event.addCapability(PALEOPEDIA_CRETACEOUS_LATE_STATS, new PaleopediaStatsProviderCretaceousLate());
+			event.addCapability(PALEOPEDIA_CRETACEOUS_LATE_STATS_COMPLETED, new PaleopediaStatsProviderCretaceousLateCompleted());
+			event.addCapability(PALEOPEDIA_PALEOGENE_STATS, new PaleopediaStatsProviderPaleogene());
+			event.addCapability(PALEOPEDIA_PALEOGENE_STATS_COMPLETED, new PaleopediaStatsProviderPaleogeneCompleted());
+			event.addCapability(PALEOPEDIA_NEOGENE_STATS, new PaleopediaStatsProviderNeogene());
+			event.addCapability(PALEOPEDIA_NEOGENE_STATS_COMPLETED, new PaleopediaStatsProviderNeogeneCompleted());
+			event.addCapability(PALEOPEDIA_PLEISTOCENE_STATS, new PaleopediaStatsProviderPleistocene());
+			event.addCapability(PALEOPEDIA_PLEISTOCENE_STATS_COMPLETED, new PaleopediaStatsProviderPleistoceneCompleted());
+		}
+	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent //Red overlay when submarine battery is low
@@ -134,6 +196,21 @@ public class LepidodendronEventSubscribers {
 					i = Math.max(((EntityAgeable) entity).getGrowingAge(), -5999);
 				}
 				((EntityAgeable)entity).setGrowingAge(i - 1);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onLavaInNether(DecorateBiomeEvent.Post event) {
+		if (event.getWorld().provider.getDimension() == -1
+				&& LepidodendronConfig.doVolcanoNether > 0) {
+			BlockPos pos = event.getPos();
+			for (int i = 0; i < LepidodendronConfig.doVolcanoNether * 10; ++i)
+			{
+				int j = event.getWorld().rand.nextInt(16) + 8;
+				int k = event.getWorld().rand.nextInt(16) + 8;
+				int l = event.getWorld().rand.nextInt(event.getWorld().getHeight(pos.add(j, 0, k)).getY() + 32);
+				(new WorldGenVolcanoEruptableNether()).generate(event.getWorld(), event.getWorld().rand, pos.add(j, l, k));
 			}
 		}
 	}
@@ -230,7 +307,7 @@ public class LepidodendronEventSubscribers {
 		}
 	}
 
-	@SubscribeEvent //Give the Palaeopedia on first join:
+	@SubscribeEvent
 	public void killedEntity(LivingDropsEvent event) {
 		if (event.getEntity().getClass() == EntityBat.class) {
 			int chancer = 30;
@@ -250,6 +327,11 @@ public class LepidodendronEventSubscribers {
 
   	@SubscribeEvent //Give the Palaeopedia on first join and notify about flowerpots:
 	public void playerJoined(EntityJoinWorldEvent event) {
+
+		if ((event.getEntity() instanceof EntityPlayer)) {
+			LepidodendronBookSubscribers.updatePaleopediaStats((EntityPlayer)event.getEntity());
+		}
+
 		if (LepidodendronConfig.giveBook) {
 			if ((event.getEntity() instanceof EntityPlayerMP)) {
 				ModTriggers.PALAEOPEDIA_GIVEN.trigger((EntityPlayerMP) event.getEntity());
@@ -283,13 +365,6 @@ public class LepidodendronEventSubscribers {
 				}
 			}
 		}
-	}
-
-	@SubscribeEvent //Default to standard attack behaviour
-	public void attackTargetSet(LivingSetAttackTargetEvent event) {
-		  if (event.getEntity() instanceof EntityPrehistoricFloraAgeableBase) {
-			  ((EntityPrehistoricFloraAgeableBase)event.getEntity()).wasWarning = false;
-		  }
 	}
 
 	@SubscribeEvent //Some instructions for use of rideables
@@ -445,9 +520,16 @@ public class LepidodendronEventSubscribers {
 
 	@SubscribeEvent //Bat poo
 	public void guano(LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntity() instanceof EntityBat && LepidodendronConfig.doGuanoBats) {
+		double chancer = LepidodendronConfig.doGuanoBats;
+		if (chancer < 0.0D) {
+			chancer = 0.0D;
+		}
+		if (chancer > 1000.0D) {
+			chancer = 1000.0D;
+		}
+		if (event.getEntity() instanceof EntityBat && chancer > 0.0D) {
 			EntityBat bat = (EntityBat) event.getEntity();
-			if (bat.world.rand.nextInt(6000) == 0 && (!bat.world.isRemote)
+			if (bat.world.rand.nextInt((int)Math.floor(6000 / chancer)) == 0 && (!bat.world.isRemote)
 					&& bat.getIsBatHanging() && bat.world.isAirBlock(bat.getPosition().down())) {
 				EntityPrehistoricFloraGuanoBall guanoBall = new EntityPrehistoricFloraGuanoBall(bat.world, bat.posX, bat.posY - 0.5, bat.posZ);
 				guanoBall.setFromMob(true);
@@ -1552,20 +1634,63 @@ public class LepidodendronEventSubscribers {
 					List<String> tt = event.getToolTip();
 					tt.add(ClientProxyLepidodendronMod.keyPalaeopdeiaOpen.getDisplayName() + " " + I18n.translateToLocal("tooltip.palaeopedia.name").trim());
 					if (event.getEntityPlayer() != null) {
-						tt.add(TextFormatting.DARK_RED + "Precambrian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 0, false));
-						tt.add(TextFormatting.DARK_GREEN + "Cambrian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 1, false));
-						tt.add(TextFormatting.DARK_AQUA + "Ordovician" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 2, false));
-						tt.add(TextFormatting.AQUA + "Silurian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 3, false));
-						tt.add(TextFormatting.GOLD + "Devonian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 4, false));
-						tt.add(TextFormatting.DARK_BLUE + "Carboniferous" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 5, false));
-						tt.add(TextFormatting.RED + "Permian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 6, false));
-						tt.add(TextFormatting.DARK_PURPLE + "Triassic" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 7, false));
-						tt.add(TextFormatting.BLUE + "Jurassic" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 8, false));
-						tt.add(TextFormatting.GREEN + "Early Cretaceous" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 9, false));
-						tt.add(TextFormatting.GREEN + "Late Cretaceous" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 10, false));
-						tt.add(TextFormatting.GOLD + "Paleogene" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 11, false));
-						tt.add(TextFormatting.YELLOW + "Neogene" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 12, false));
-						tt.add(TextFormatting.GRAY + "Pleistocene" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 13, false));
+						DecimalFormat df = new DecimalFormat("##0.00");
+						IPaleopediaStatsPrecambrian statsPrecambrian = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPrecambrian.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPrecambrianCompleted statsPrecambrianComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPrecambrianCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCambrian statsCambrian = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCambrian.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCambrianCompleted statsCambrianComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCambrianCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsOrdovician statsOrdovician = event.getEntityPlayer().getCapability(PaleopediaStatsProviderOrdovician.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsOrdovicianCompleted statsOrdovicianComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderOrdovicianCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsSilurian statsSilurian = event.getEntityPlayer().getCapability(PaleopediaStatsProviderSilurian.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsSilurianCompleted statsSilurianComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderSilurianCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsDevonian statsDevonian = event.getEntityPlayer().getCapability(PaleopediaStatsProviderDevonian.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsDevonianCompleted statsDevonianComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderDevonianCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCarboniferous statsCarboniferous = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCarboniferous.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCarboniferousCompleted statsCarboniferousComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCarboniferousCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPermian statsPermian = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPermian.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPermianCompleted statsPermianComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPermianCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsTriassic statsTriassic = event.getEntityPlayer().getCapability(PaleopediaStatsProviderTriassic.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsTriassicCompleted statsTriassicComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderTriassicCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsJurassic statsJurassic = event.getEntityPlayer().getCapability(PaleopediaStatsProviderJurassic.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsJurassicCompleted statsJurassicComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderJurassicCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCretaceousEarly statsCretaceousEarly = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCretaceousEarly.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCretaceousEarlyCompleted statsCretaceousEarlyComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCretaceousEarlyCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCretaceousLate statsCretaceousLate = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCretaceousLate.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsCretaceousLateCompleted statsCretaceousLateComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderCretaceousLateCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPaleogene statsPaleogene = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPaleogene.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPaleogeneCompleted statsPaleogeneComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPaleogeneCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsNeogene statsNeogene = event.getEntityPlayer().getCapability(PaleopediaStatsProviderNeogene.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsNeogeneCompleted statsNeogeneComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderNeogeneCompleted.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPleistocene statsPleistocene = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPleistocene.PALEOPEDIA_STATS, null);
+						IPaleopediaStatsPleistoceneCompleted statsPleistoceneComplete = event.getEntityPlayer().getCapability(PaleopediaStatsProviderPleistoceneCompleted.PALEOPEDIA_STATS, null);
+						tt.add(TextFormatting.DARK_RED + "Precambrian: " + (int)statsPrecambrianComplete.getStats() + " of " + (int)statsPrecambrian.getStats() + " (" + df.format(100.00 * ((double)statsPrecambrianComplete.getStats()/statsPrecambrian.getStats())) + "%)");
+						tt.add(TextFormatting.DARK_GREEN + "Cambrian: " + (int)statsCambrianComplete.getStats() + " of " + (int)statsCambrian.getStats() + " (" + df.format(100.00 * ((double)statsCambrianComplete.getStats()/statsCambrian.getStats())) + "%)");
+						tt.add(TextFormatting.DARK_AQUA + "Ordovician: " + (int)statsOrdovicianComplete.getStats() + " of " + (int)statsOrdovician.getStats() + " (" + df.format(100.00 * ((double)statsOrdovicianComplete.getStats()/statsOrdovician.getStats())) + "%)");
+						tt.add(TextFormatting.AQUA + "Silurian: " + (int)statsSilurianComplete.getStats() + " of " + (int)statsSilurian.getStats() + " (" + df.format(100.00 * ((double)statsSilurianComplete.getStats()/statsSilurian.getStats())) + "%)");
+						tt.add(TextFormatting.GOLD + "Devonian: " + (int)statsDevonianComplete.getStats() + " of " + (int)statsDevonian.getStats() + " (" + df.format(100.00 * ((double)statsDevonianComplete.getStats()/statsDevonian.getStats())) + "%)");
+						tt.add(TextFormatting.DARK_BLUE + "Carboniferous: " + (int)statsCarboniferousComplete.getStats() + " of " + (int)statsCarboniferous.getStats() + " (" + df.format(100.00 * ((double)statsCarboniferousComplete.getStats()/statsCarboniferous.getStats())) + "%)");
+						tt.add(TextFormatting.RED + "Permian: " + (int)statsPermianComplete.getStats() + " of " + (int)statsPermian.getStats() + " (" + df.format(100.00 * ((double)statsPermianComplete.getStats()/statsPermian.getStats())) + "%)");
+						tt.add(TextFormatting.DARK_PURPLE + "Triassic: " + (int)statsTriassicComplete.getStats() + " of " + (int)statsTriassic.getStats() + " (" + df.format(100.00 * ((double)statsTriassicComplete.getStats()/statsTriassic.getStats())) + "%)");
+						tt.add(TextFormatting.BLUE + "Jurassic: " + (int)statsJurassicComplete.getStats() + " of " + (int)statsJurassic.getStats() + " (" + df.format(100.00 * ((double)statsJurassicComplete.getStats()/statsJurassic.getStats())) + "%)");
+						tt.add(TextFormatting.GREEN + "Early Cretaceous: " + (int)statsCretaceousEarlyComplete.getStats() + " of " + (int)statsCretaceousEarly.getStats() + " (" + df.format(100.00 * ((double)statsCretaceousEarlyComplete.getStats()/statsCretaceousEarly.getStats())) + "%)");
+						tt.add(TextFormatting.GREEN + "Late Cretaceous: " + (int)statsCretaceousLateComplete.getStats() + " of " + (int)statsCretaceousLate.getStats() + " (" + df.format(100.00 * ((double)statsCretaceousLateComplete.getStats()/statsCretaceousLate.getStats())) + "%)");
+						tt.add(TextFormatting.GOLD + "Paleogene: " + (int)statsPaleogeneComplete.getStats() + " of " + (int)statsPaleogene.getStats() + " (" + df.format(100.00 * ((double)statsPaleogeneComplete.getStats()/statsPaleogene.getStats())) + "%)");
+						tt.add(TextFormatting.YELLOW + "Neogene: " + (int)statsNeogeneComplete.getStats() + " of " + (int)statsNeogene.getStats() + " (" + df.format(100.00 * ((double)statsNeogeneComplete.getStats()/statsNeogene.getStats())) + "%)");
+						tt.add(TextFormatting.GRAY + "Pleistocene: " + (int)statsPleistoceneComplete.getStats() + " of " + (int)statsPleistocene.getStats() + " (" + df.format(100.00 * ((double)statsPleistoceneComplete.getStats()/statsPleistocene.getStats())) + "%)");
+
+//						tt.add(TextFormatting.DARK_GREEN + "Cambrian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 1, false));
+//						tt.add(TextFormatting.DARK_AQUA + "Ordovician" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 2, false));
+//						tt.add(TextFormatting.AQUA + "Silurian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 3, false));
+//						tt.add(TextFormatting.GOLD + "Devonian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 4, false));
+//						tt.add(TextFormatting.DARK_BLUE + "Carboniferous" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 5, false));
+//						tt.add(TextFormatting.RED + "Permian" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 6, false));
+//						tt.add(TextFormatting.DARK_PURPLE + "Triassic" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 7, false));
+//						tt.add(TextFormatting.BLUE + "Jurassic" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 8, false));
+//						tt.add(TextFormatting.GREEN + "Early Cretaceous" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 9, false));
+//						tt.add(TextFormatting.GREEN + "Late Cretaceous" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 10, false));
+//						tt.add(TextFormatting.GOLD + "Paleogene" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 11, false));
+//						tt.add(TextFormatting.YELLOW + "Neogene" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 12, false));
+//						tt.add(TextFormatting.GRAY + "Pleistocene" + PercentageCollected.getPercentagePerDimension(event.getEntityPlayer(), 13, false));
 					}
 				}
 			}
@@ -1578,7 +1703,7 @@ public class LepidodendronEventSubscribers {
 					case 0:
 					default: //Oak
 						tt.add("Type: Flowering tree");
-						tt.add("Periods: [Late Cretaceous (?) -] Paleogene  - Neogene - Pleistocene - present");
+						tt.add("Periods: [Late Cretaceous (?) - ] Paleogene  - Neogene - Pleistocene - present");
 						tt.add("Propagation: acorns drop from leaves");
 						break;
 
@@ -1608,7 +1733,7 @@ public class LepidodendronEventSubscribers {
 
 					case 5: //Dark Oak
 						tt.add("Type: Flowering tree");
-						tt.add("Periods: [Late Cretaceous (?) -] Paleogene  - Neogene - Pleistocene - present");
+						tt.add("Periods: [Late Cretaceous (?) - ] Paleogene  - Neogene - Pleistocene - present");
 						tt.add("Propagation: acorns drop from leaves");
 						break;
 				}

@@ -21,12 +21,12 @@
 		{
 			"advancement": "lepidodendron:pf_adv_book_cyanorus",
 			"type": "text",
-			"text": "Cyanorus singularis comes from the Upper Ediacaran, with fossils found from the White Sea, Russia. It is a elongated proarticulatan, growing up to 1 cm in overall length. It is currently the only proarticulatan to be accepted to have internal structures, something very rarely preserved in Precambrian rocks."
+			"text": "Cyanorus singularis comes from the late Ediacaran, with fossils found from the White Sea, Russia. It is a elongated proarticulatan, growing up to 1 cm in overall length. It is currently the only proarticulatan to be accepted to have internal structures, something very rarely preserved in Precambrian rocks."
 		},
 		{
 			"advancement": "lepidodendron:pf_adv_book_cyanorus",
 			"type": "text",
-			"text": "The generic name derives from the English word 'Cyan', which further derives from the Greek word 'kúanos', to mean 'Blue'; and the Greek word 'óros', to mean 'mountain'. The specific name derives from the directly from the Latin word 'singularis', to mean 'singular' or 'peculiar'."
+			"text": "The generic name derives from the English word 'Cyan', which further derives from the Greek word 'kúanos', to mean 'Blue'; and the Greek word 'óros', to mean 'mountain'. The specific name derives from the directly from the Latin word 'singularis', to mean 'singular/peculiar'."
 		},
 		{
 			"type": "lepidodendron:diet",

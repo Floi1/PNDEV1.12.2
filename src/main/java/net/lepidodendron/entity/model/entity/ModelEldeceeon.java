@@ -367,6 +367,7 @@ public class ModelEldeceeon extends ModelBasePalaeopedia {
         //Rotations, positions and sizing:
         this.hips.offsetY = -2.0F;
         this.hips.offsetX = -0.338F;
+        this.hips.offsetZ = 2.5F;
         this.hips.rotateAngleY = (float)Math.toRadians(200);
         this.hips.rotateAngleX = (float)Math.toRadians(18);
         this.hips.rotateAngleZ = (float)Math.toRadians(-8);
@@ -440,6 +441,8 @@ public class ModelEldeceeon extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.eyeright.setScale(1,1,1);
+        this.eyeleft.setScale(1,1,1);
         EntityPrehistoricFloraEldeceeon ee = (EntityPrehistoricFloraEldeceeon) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {

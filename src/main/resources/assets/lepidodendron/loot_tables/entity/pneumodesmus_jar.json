@@ -1,12 +1,12 @@
 {
   "pools": [
     {
-      "name": "phantaspis",
+      "name": "pneumodesmus",
       "rolls": 1,
       "entries": [
         {
           "type": "item",
-          "name": "lepidodendron:pneumodesmus_raw",
+          "name": "lepidodendron:myriapod_pneumodesmus_raw",
           "weight": 1,
           "functions": [
             {

@@ -8,8 +8,11 @@ import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -40,6 +43,7 @@ import net.minecraft.world.gen.feature.WorldGenReed;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -85,33 +89,20 @@ public class BlockSeaweed extends ElementsLepidodendronMod.ModElement {
 	@Override
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
 
+		if (!Functions.shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimModernSeaBlockLife)) {
+			return;
+		}
+		
 		int weight = LepidodendronConfigPlants.weightSeaweed;
 		if (weight > 100) {weight = 100;}
 		if (weight < 0) {weight = 0;}
 		if (Math.random() < ((double) (100 - (double) weight)/100)) {
 			return;
 		}
-		
-		boolean dimensionCriteria = false;
-		if (shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimAlgae))
-			dimensionCriteria = true;
-		if (!dimensionCriteria || dimID == LepidodendronConfig.dimPrecambrian
-				|| dimID == LepidodendronConfig.dimCambrian
-				|| dimID == LepidodendronConfig.dimDevonian
-				|| dimID == LepidodendronConfig.dimOrdovician || dimID == LepidodendronConfig.dimSilurian
-				|| dimID == LepidodendronConfig.dimCarboniferous
-				|| dimID == LepidodendronConfig.dimPermian
-				|| dimID == LepidodendronConfig.dimTriassic
-				|| dimID == LepidodendronConfig.dimJurassic
-				|| dimID == LepidodendronConfig.dimCretaceousEarly
-		)
-			return;
-		if (!dimensionCriteria)
-			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
-		if (!matchBiome(biome, LepidodendronConfigPlants.genSeaweedBlacklistBiomes)) {
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
+		if (!Functions.matchBiome(biome, LepidodendronConfigPlants.genSeaweedBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH))
@@ -121,28 +112,37 @@ public class BlockSeaweed extends ElementsLepidodendronMod.ModElement {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.VOID))
 				biomeCriteria = false;
 		}
-		if (matchBiome(biome, LepidodendronConfigPlants.genSeaweedOverrideBiomes))
+		if (Functions.matchBiome(biome, LepidodendronConfigPlants.genSeaweedOverrideBiomes))
 			biomeCriteria = true;
-		if (!biomeCriteria)
+
+		if (!biomeCriteria) {
 			return;
+		}
 
 		for (int i = 0; i < 12; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
-			int i11 = random.nextInt(128);
+			int i11 = random.nextInt(Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) * 2);
 			int l14 = chunkZ + random.nextInt(16) + 8;
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 40; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
-						if (((BlockCustom) block).isWaterBlock(world, blockpos1) && ((BlockCustom) block).isWaterBlock(world, blockpos1.up())) {
-							BlockPos blockpos2 = blockpos1.down();
-							int j = 1 + random.nextInt(random.nextInt(random.nextInt(10) + 1) + 1);
-							j = Math.min(10, j);
-							for (int k = 0; k < j; ++k)
-								if (((BlockCustom) block).canBlockStay(world, blockpos1)
-								&& ((BlockCustom) block).canBlockStay(world, blockpos1.up(k)))
-									world.setBlockState(blockpos1.up(k), block.getDefaultState(), 2);
+					for (int i = 0; i < 10; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up(random.nextInt(40));
+						blockpos1 = blockpos1.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (blockpos1.getY() >= Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) - 15) {
+							if (((BlockCustom) block).isWaterBlock(world, blockpos1) && ((BlockCustom) block).isWaterBlock(world, blockpos1.up())) {
+								BlockPos blockpos2 = blockpos1.down();
+								int j = 1 + random.nextInt(random.nextInt(random.nextInt(10) + 1) + 1);
+								j = Math.min(10, j);
+								for (int k = 0; k < j; ++k)
+									if (((BlockCustom) block).canBlockStay(world, blockpos1)
+											&& ((BlockCustom) block).canBlockStay(world, blockpos1.up(k)))
+										world.setBlockState(blockpos1.up(k), block.getDefaultState(), 2);
+							}
 						}
 					}
 					return true;
@@ -272,6 +272,8 @@ public class BlockSeaweed extends ElementsLepidodendronMod.ModElement {
 			if ((world.getBlockState(pos.down()).getMaterial() != Material.SAND)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.ROCK)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.GROUND)
+				&& (world.getBlockState(pos.down()).getMaterial() != Material.CORAL)
+				&& (world.getBlockState(pos.down()).getMaterial() != Material.SPONGE)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.WOOD)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.CLAY)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.IRON)
@@ -330,14 +332,14 @@ public class BlockSeaweed extends ElementsLepidodendronMod.ModElement {
 		}
 
 		public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	    
 	    @SideOnly(Side.CLIENT)
@@ -345,8 +347,8 @@ public class BlockSeaweed extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Marine Algae");
-	        	tooltip.add("Periods: [Neoproterozoic (Tonian (?) - Cryogenian (?) - Ediacaran (?)) - Cambrian (?) - Ordovician (?) - Silurian (?) - Devonian (?) - Carboniferous (?) - Permian (?) - Triassic (?) - Jurassic (?) - Early Cretaceous (?) -] Late Cretaceous (?) - Paleogene (?) - Neogene - Pleistocene - present");
-	        	tooltip.add("Propagation: water");}
+	        	tooltip.add("Periods: [Neoproterozoic (Tonian (?) - Cryogenian (?) - Ediacaran (?)) - Cambrian (?) - Ordovician (?) - Silurian (?) - Devonian (?) - Carboniferous (?) - Permian (?) - Triassic (?) - Jurassic (?) - Early Cretaceous (?) - ] Late Cretaceous (?) - Paleogene (?) - Neogene - Pleistocene - present");
+	        	tooltip.add("Propagation: Water");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

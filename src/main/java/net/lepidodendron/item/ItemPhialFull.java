@@ -91,6 +91,7 @@ public class ItemPhialFull extends ElementsLepidodendronMod.ModElement {
 			new ModelResourceLocation("lepidodendron:entities/phial_eggs_dvinosaurus", "inventory"),
 			new ModelResourceLocation("lepidodendron:entities/phial_eggs_edestus", "inventory"),
 			new ModelResourceLocation("lepidodendron:entities/phial_eggs_myriapod_eoarthropleura", "inventory"),
+            new ModelResourceLocation("lepidodendron:entities/phial_eggs_myriapod_crussolum", "inventory"),
 			new ModelResourceLocation("lepidodendron:entities/phial_eggs_eryops", "inventory"),
 			new ModelResourceLocation("lepidodendron:entities/phial_eggs_eurypterus", "inventory"),
 			new ModelResourceLocation("lepidodendron:entities/phial_eggs_fadenia_carboniferous", "inventory"),
@@ -198,7 +199,7 @@ public class ItemPhialFull extends ElementsLepidodendronMod.ModElement {
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_eldeceeon", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_silvanerpeton", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_westlothiana", "inventory"),
-				new ModelResourceLocation("lepidodendron:entities/phial_eggs_rhadinosteus", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_rhadinosteus", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_triadobatrachus", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_apateon", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_microbrachis", "inventory"),
@@ -209,10 +210,38 @@ public class ItemPhialFull extends ElementsLepidodendronMod.ModElement {
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_cretoxyrhina", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_egertonodus", "inventory"),
 				new ModelResourceLocation("lepidodendron:entities/phial_eggs_thaiodus", "inventory"),
-				new ModelResourceLocation("lepidodendron:entities/phial_eggs_sarcoprion", "inventory")
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_sarcoprion", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_notobatrachus", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_cretalamna", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_cratopipa", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_prosalirus", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_permarachne", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_santanmantis", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_valdotriton", "inventory"),
+                new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_kururubatrachus", "inventory"),
+
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_myriapod_velocipede", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_myriapod_devonobius", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_myriapod_polydesmid", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_myriapod_juliform", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_hyogobatrachus", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_tadpole_genibatrachus", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_cretosaja", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_hangingfly", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_scorpionfly", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_aquaticnymph_mayfly", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_aquaticnymph_stonefly", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_aquaticnymph_damselfly", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_fortiholcorpa", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_juracimbrophlebia", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_aquaticnymph_argentinala", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_aquaticnymph_velisoptera", "inventory"),
+				new ModelResourceLocation("lepidodendron:entities/phial_eggs_ptyktoptychion", "inventory")
 
 
-		);
+
+
+				);
 
 		ModelLoader.setCustomMeshDefinition(block, stack -> {
 			if (stack.hasTagCompound()) {

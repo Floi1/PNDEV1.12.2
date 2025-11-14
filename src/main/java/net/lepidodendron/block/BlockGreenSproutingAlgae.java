@@ -8,10 +8,12 @@ import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
 import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -39,6 +41,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -81,154 +84,43 @@ public class BlockGreenSproutingAlgae extends ElementsLepidodendronMod.ModElemen
 	}
 
 	@Override
-	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {		
-		
+	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
+
+		if (!Functions.shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimModernSeaBlockLife)) {
+			return;
+		}
+
 		int weight = LepidodendronConfigPlants.weightGreenSproutingAlgae;
 		if (weight > 100) {weight = 100;}
 		if (weight < 0) {weight = 0;}
 		if (Math.random() < ((double) (100 - (double) weight)/100)) {
 			return;
 		}
-		
+
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
-		if (!matchBiome(biome, LepidodendronConfigPlants.genGreenSproutingAlgaeBlacklistBiomes)) {
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
-				biomeCriteria = true;
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH))
-				biomeCriteria = true;
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
+		if (!Functions.matchBiome(biome, LepidodendronConfigPlants.genGreenSproutingAlgaeBlacklistBiomes)) {
+			biomeCriteria = true;
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.DEAD))
 				biomeCriteria = false;
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.VOID))
 				biomeCriteria = false;
 		}
-		if (matchBiome(biome, LepidodendronConfigPlants.genGreenSproutingAlgaeOverrideBiomes))
+		if (Functions.matchBiome(biome, LepidodendronConfigPlants.genGreenSproutingAlgaeOverrideBiomes))
 			biomeCriteria = true;
-		if ((dimID == LepidodendronConfig.dimPrecambrian)) {
-			biomeCriteria = false;
-		}
-		if ((dimID == LepidodendronConfig.dimCambrian)
-			|| (dimID == LepidodendronConfig.dimOrdovician || dimID == LepidodendronConfig.dimSilurian)
-			|| (dimID == LepidodendronConfig.dimDevonian)
-			|| (dimID == LepidodendronConfig.dimCarboniferous)
-			|| (dimID == LepidodendronConfig.dimPermian)
-			|| (dimID == LepidodendronConfig.dimTriassic)
-			|| (dimID == LepidodendronConfig.dimJurassic)
-			|| (dimID == LepidodendronConfig.dimCretaceousEarly)
-			 ) {
-			biomeCriteria = true;
-		}
-		if (!biomeCriteria)
+
+		if (!biomeCriteria) {
 			return;
-
-		int multiplier = 1;
-		if ((dimID == LepidodendronConfig.dimDevonian)
-				|| (dimID == LepidodendronConfig.dimOrdovician || dimID == LepidodendronConfig.dimSilurian)
-				|| (dimID == LepidodendronConfig.dimCambrian)
-		) {
-			multiplier = 2;
-		}
-		if ((dimID == LepidodendronConfig.dimCarboniferous)
-			|| (dimID == LepidodendronConfig.dimPermian)
-		) {
-			multiplier = 5;
 		}
 
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_flooded_forest"))
-		{
-			multiplier = 5;
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_ocean_clam_beds"))
-		{
-			multiplier = 10;
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_brackish")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_deep_rocky")
-		)
-			multiplier = 36;
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_river")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_river")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_river")
-
-
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_creek_coastal")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_creek_estuary")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_creek_hills")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_creek_polar")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_creek_marsh")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_creek_swamp")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:carboniferous_bay")
-
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_coastal")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_coastal_black")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_desert")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_flooded_forest")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_gondwanan_forest")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_gondwanan_plain")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_warm_lakeland")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_xeric")
-
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_coastal")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_arid")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_cold_glossopteris")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_desert")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_highlands")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_lowlands")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_wetlands")
-
-
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_coastal")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_fern_pasture")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_floodplain")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_garrigue")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_ginkgo_woodland")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_redwood_forest")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_creek_southern_taiga")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_mire")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_mire_helper")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_mire_lakes")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_lakes")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_lake_shore")
-		)
-		{
-			multiplier = 12;
-		}
-
-		for (int i = 0; i < (int) 10 * multiplier; i++) {
+		for (int i = 0; i < (int) 10; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
-			int i11 = random.nextInt(128);
+			int i11 = random.nextInt(Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) * 2);
 			int l14 = chunkZ + random.nextInt(16) + 8;
+
 			(new AlgaeGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
 	}
-
-	public static boolean matchBiome(Biome biome, String[] biomesList) {
-    	
-    	//String regName = biome.getRegistryName().toString();
-    	
-        String[] var2 = biomesList;
-        int var3 = biomesList.length;
-
-        for(int var4 = 0; var4 < var3; ++var4) {
-            String checkBiome = var2[var4];
-            if (!checkBiome.contains(":")) {
-            	//System.err.println("modid test: " + biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":") - 1));
-	            if (checkBiome.equalsIgnoreCase(
-	            	biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":"))
-	            	)) {
-	                return true;
-	            }
-        	}
-        	if (checkBiome.equalsIgnoreCase(biome.getRegistryName().toString())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 	
 	public static class BlockCustom extends Block implements net.minecraftforge.common.IShearable, IAdvancementGranter {
 		
@@ -514,22 +406,22 @@ public class BlockGreenSproutingAlgae extends ElementsLepidodendronMod.ModElemen
 	    }
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 	    
 	    @SideOnly(Side.CLIENT)
 		@Override
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Freshwater or Marine Algae");
-				tooltip.add("Periods: Cambrian - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene - present");
-				tooltip.add("Propagation: water");}
+				tooltip.add("Periods: Cambrian - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");
+				tooltip.add("Propagation: Water");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

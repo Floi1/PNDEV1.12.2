@@ -131,7 +131,7 @@ public class EntityPrehistoricFloraMeganeuropsis extends EntityPrehistoricFloraI
 	}
 
 	public static String getPeriod() {
-		return "early Permian";
+		return "Permian";
 	}
 
 	//public static String getHabitat() {
@@ -331,7 +331,7 @@ public class EntityPrehistoricFloraMeganeuropsis extends EntityPrehistoricFloraI
 
 	@Override
 	protected float getSoundVolume() {
-		return 1.0F;
+		return 0.4F;
 	}
 
 	@Nullable

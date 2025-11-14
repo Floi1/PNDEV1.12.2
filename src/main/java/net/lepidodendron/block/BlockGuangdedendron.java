@@ -6,6 +6,7 @@ import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockReed;
 import net.minecraft.block.SoundType;
@@ -90,7 +91,7 @@ public class BlockGuangdedendron extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genGuangdedendronBlacklistBiomes))) {
 			if ((BiomeDictionary.hasType(biome, BiomeDictionary.Type.SANDY)) 
 				&& (BiomeDictionary.hasType(biome, BiomeDictionary.Type.DRY)))
@@ -139,8 +140,12 @@ public class BlockGuangdedendron extends ElementsLepidodendronMod.ModElement {
 				
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 20; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up(random.nextInt(40));
 						if (world.isAirBlock(blockpos1) && world.isAirBlock(blockpos1.up()) && blockpos1.getY() >= minH && (blockpos1.getY() <= maxH || maxH == 0) ) {
 							int j = 1 + random.nextInt(random.nextInt(7) + 1);
 							j = Math.max(2, j);
@@ -369,8 +374,8 @@ public class BlockGuangdedendron extends ElementsLepidodendronMod.ModElement {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Lycophyte shrub");
 	        	tooltip.add("Periods: Devonian");
-				tooltip.add("Note: plant next to water");
-	        	tooltip.add("Propagation: spores");}
+				tooltip.add("Note: Plant next to water");
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

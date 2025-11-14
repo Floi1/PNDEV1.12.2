@@ -107,7 +107,7 @@ public class BlockBirdsnestFern extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genBirdsnestFernBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE))
 				biomeCriteria = true;
@@ -159,8 +159,8 @@ public class BlockBirdsnestFern extends ElementsLepidodendronMod.ModElement {
 		for (int i = 0; i < (int) GenChance; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
 			int l14 = chunkZ + random.nextInt(16) + 8;
-			int yMin = world.getChunk(chunkX, chunkZ).getHeight(new BlockPos(l6, 0, l14));
-			int yMax = world.getChunk(chunkX, chunkZ).getHeight(new BlockPos(l6, 0, l14)) + 50;
+			int yMin = world.getChunk(new BlockPos(l6, 0, l14)).getHeight(new BlockPos(l6, 0, l14));
+			int yMax = world.getChunk(new BlockPos(l6, 0, l14)).getHeight(new BlockPos(l6, 0, l14)) + 50;
 			int i11 = yMin + random.nextInt(yMax - yMin);
 			(new FernEpiphyteGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
@@ -382,8 +382,8 @@ public class BlockBirdsnestFern extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Fern");
-	        tooltip.add("Periods: early Cretaceous - Paleogene - Neogene - Pleistocene [- present]");
-	        tooltip.add("Propagation: spores");}
+	        tooltip.add("Periods: Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+	        tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

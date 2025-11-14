@@ -97,7 +97,7 @@ public class BlockKajanthus extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genKajanthusBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE))
 				biomeCriteria = true;
@@ -454,8 +454,8 @@ public class BlockKajanthus extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Flowering-plant vine");
-	        	tooltip.add("Periods: early Cretaceous");
-				tooltip.add("Propagation: flowers");}
+	        	tooltip.add("Periods: Early Cretaceous");
+				tooltip.add("Propagation: Flowers");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

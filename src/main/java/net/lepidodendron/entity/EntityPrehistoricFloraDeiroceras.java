@@ -39,14 +39,16 @@ public class EntityPrehistoricFloraDeiroceras extends EntityPrehistoricFloraNaut
 	public BlockPos currentTarget;
 	@SideOnly(Side.CLIENT)
 	public ChainBuffer chainBuffer;
+	@SideOnly(Side.CLIENT)
+	public float bodyAngle;
 
 	public EntityPrehistoricFloraDeiroceras(World world) {
 		super(world);
-		setSize(1.0F, 0.99F);
+		setSize(0.9F, 0.9F);
 		minWidth = 0.1F;
-		maxWidth = 1.0F;
-		maxHeight = 0.99F;
-		maxHealthAgeable = 24.0D;
+		maxWidth = 0.9F;
+		maxHeight = 0.9F;
+		maxHealthAgeable = 6.0D;
 	}
 
 	@Override
@@ -71,7 +73,15 @@ public class EntityPrehistoricFloraDeiroceras extends EntityPrehistoricFloraNaut
 		return "Ordovician - Silurian - Devonian";
 	}
 
-	//public static String getHabitat() {return "Aquatic";}
+	public boolean canBeVertical() {
+		//isReally in Water
+		boolean check1 = this.isReallyInWater();
+		int waterTest = Math.round(2 * this.getAgeScale());
+		boolean check2 = this.world.getBlockState(this.getPosition().up(waterTest)).getMaterial() != Material.WATER;
+
+
+		return check1 && !check2;
+	}
 
 	@Override
 	public boolean isAtBottom() {
@@ -107,7 +117,7 @@ public class EntityPrehistoricFloraDeiroceras extends EntityPrehistoricFloraNaut
 
 	@Override
 	protected float getAISpeedNautiloid() {
-		return 0.1f;
+		return 0.05f;
 	}
 
 	protected void initEntityAI() {
@@ -159,6 +169,20 @@ public class EntityPrehistoricFloraDeiroceras extends EntityPrehistoricFloraNaut
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		//this.renderYawOffset = this.rotationYaw;
+		if (this.world.isRemote) {
+			if (this.canBeVertical()) {
+				this.bodyAngle ++;
+			}
+			else {
+				this.bodyAngle --;
+			}
+			if (this.bodyAngle > 90) {
+				this.bodyAngle = 90;
+			}
+			if (this.bodyAngle < 0) {
+				this.bodyAngle = 0;
+			}
+		}
 		if (this.isEntityAlive() && isInWater()) {
 			if (this.isAtBottom()) {
 				//Feeding from bottom pose:

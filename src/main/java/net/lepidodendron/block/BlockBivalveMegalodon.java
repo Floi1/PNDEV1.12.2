@@ -6,6 +6,7 @@ import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronConfigPlants;
 import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.util.*;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
 import net.lepidodendron.world.biome.jurassic.BiomeJurassic;
@@ -94,6 +95,33 @@ public class BlockBivalveMegalodon extends ElementsLepidodendronMod.ModElement {
 		) {
 			dimensionCriteria = true;
 		}
+		if (dimID == LepidodendronConfig.dimPrecambrian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimCambrian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimOrdovician){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimSilurian) {
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimDevonian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimCarboniferous){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimPermian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimTriassic){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimJurassic){
+			dimensionCriteria = false;
+		}
 		if (!dimensionCriteria)
 			return;
 
@@ -117,7 +145,7 @@ public class BlockBivalveMegalodon extends ElementsLepidodendronMod.ModElement {
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genBivalvePrehistoricBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -222,8 +250,12 @@ public class BlockBivalveMegalodon extends ElementsLepidodendronMod.ModElement {
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 40; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(6) - random.nextInt(6), 0, random.nextInt(6) - random.nextInt(6));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(6) - random.nextInt(6), 0, random.nextInt(6) - random.nextInt(6));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up();
 						if (Functions.isWater(world, blockpos1)) {
 							boolean waterDepthCheckMax = false;
 							boolean waterDepthCheckMin = true;

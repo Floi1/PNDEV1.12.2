@@ -9,7 +9,7 @@
 			"trigger": "lepidodendron:pf_adv_book_calyptrina",
 			"title": "Calyptrina",
 			"type": "quest",
-			"text": "$(l)Temporal Range:$() Neoproterozoic (Ediacaran)$(br2)$(l)Habitat:$() Marine$(br2)>Annelida$(br)>Sabelliditida"
+			"text": "$(l)Temporal Range:$() Neoproterozoic (Ediacaran)$(br2)$(l)Habitat:$() Shallow Marine$(br2)>Annelida$(br)>Sabelliditida"
 		},
 		{
 			"type": "multiblock",
@@ -29,7 +29,7 @@
 		{
 			"advancement": "lepidodendron:pf_adv_book_calyptrina",
 			"type": "text",
-			"text": "Calyptrina striata comes from the Upper Ediacaran, with its tubular fossils found from the White Sea, Russia. It is a large tubular form, growing up to 10 or more cm in height. A majority of the tube would have been below the mat, with the open end sticking up vertically out of said mat in order for it to filter nutrients from the surrounding water."
+			"text": "Calyptrina striata comes from the late Ediacaran, with its tubular fossils found from the White Sea, Russia. It is a large tubular form, growing up to 10 or more cm in height. A majority of the tube would have been below the mat, with the open end sticking up vertically out of said mat in order for it to filter nutrients from the surrounding water."
 		},
 		{
 			"advancement": "lepidodendron:pf_adv_book_calyptrina",

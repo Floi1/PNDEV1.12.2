@@ -9,7 +9,7 @@
 			"trigger": "lepidodendron:pf_adv_book_andiva",
 			"title": "Andiva",
 			"type": "quest",
-			"text": "$(l)Temporal Range:$() Neoproterozoic (Ediacaran)$(br2)>Proarticulata"
+			"text": "$(l)Temporal Range:$() Neoproterozoic (Ediacaran)$(br2)>Proarticulata$(br)>Cephalozoa"
 		},
 		{
 			"type": "entity",
@@ -21,12 +21,12 @@
 		{
 			"advancement": "lepidodendron:pf_adv_book_andiva",
 			"type": "text",
-			"text": "Andiva ivantsovi comes from the Upper Ediacaran, with fossils found from the White Sea, Russia; and the Flinders Ranges, South Australia. It is a quilted lifeform that was able to move around in order to get food, and could grow up to 10 cm in length. It has been proposed that Andiva bore a 'carapace' at the front of its body, to perhaps protect itself from sharp rocks and stones in the way."
+			"text": "Andiva ivantsovi comes from the late Ediacaran, with fossils found from the White Sea, Russia; and the Flinders Ranges, South Australia. It is a quilted lifeform that was able to move around in order to get food, and could grow up to 10 cm in length. It has been proposed that Andiva bore a 'carapace' at the front of its body, to perhaps protect itself from sharp rocks and stones in the way."
 		},
 		{
 			"advancement": "lepidodendron:pf_adv_book_andiva",
 			"type": "text",
-			"text": "The generic & specific name derives from Andrei Yu. Ivantsov, who is a well known Russian Ediacaran paleontologist, and also aided in collecting the fossil material for the first study of Andiva."
+			"text": "The generic and specific name derives from Andrei Yu. Ivantsov, who is a well known Russian Ediacaran paleontologist, and also aided in collecting the fossil material for the first study of Andiva."
 		},
 		{
 			"type": "lepidodendron:diet",

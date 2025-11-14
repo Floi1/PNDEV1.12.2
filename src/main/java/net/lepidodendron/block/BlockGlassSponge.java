@@ -12,9 +12,9 @@ import net.lepidodendron.util.ModTriggers;
 import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
 import net.lepidodendron.world.biome.jurassic.BiomeJurassic;
-import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -42,6 +42,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -96,7 +97,7 @@ public class BlockGlassSponge extends ElementsLepidodendronMod.ModElement {
 		}
 		
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genGlassSpongeBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -120,6 +121,7 @@ public class BlockGlassSponge extends ElementsLepidodendronMod.ModElement {
 				|| dimID == LepidodendronConfig.dimTriassic){
 			biomeCriteria = false;
 		}
+
 		if (biome instanceof BiomeJurassic)
 		{
 			BiomeJurassic biomeJurassic = (BiomeJurassic) biome;
@@ -148,14 +150,14 @@ public class BlockGlassSponge extends ElementsLepidodendronMod.ModElement {
 
 		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_ocean_glass_sponge_reef"))
 		{
-			multiplier = 32;
+			multiplier = 92;
 		}
 
 		for (int i = 0; i < (int) 3 * multiplier; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
 			int l14 = chunkZ + random.nextInt(16) + 8;
-			int i11 = ChunkGenSpawner.getTopSolidBlock(new BlockPos(l6, 0, l14), world).getY();
-			(new AlgaeGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
+			int i11 = ChunkGenSpawner.getTopSolidBlock(new BlockPos(l6, 0, l14), world).getY() + 1;
+			//(new AlgaeGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
 	}
 
@@ -492,21 +494,21 @@ public class BlockGlassSponge extends ElementsLepidodendronMod.ModElement {
 	    }
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 		@SideOnly(Side.CLIENT)
 		@Override
 		public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 			if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Marine Sponge");
-				tooltip.add("Periods: [Ediacaran (?) - Cambrian - Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic -] Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene - present");}
+				tooltip.add("Periods: [Neoproterozoic (Ediacaran (?)) - Cambrian - Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - ] Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");}
 			super.addInformation(stack, player, tooltip, advanced);
 		}
 

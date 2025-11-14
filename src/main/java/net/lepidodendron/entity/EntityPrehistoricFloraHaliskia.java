@@ -83,6 +83,7 @@ public class EntityPrehistoricFloraHaliskia extends EntityPrehistoricFloraLandCl
 		return this.world.isDaytime();
 	}
 
+	@Override
 	public boolean hasAlarm() {
 		return true;
 	}
@@ -232,7 +233,7 @@ public class EntityPrehistoricFloraHaliskia extends EntityPrehistoricFloraLandCl
 		if (this.getIsFast()) {
 			return 0.295f;
 		}
-		return 0.225f;
+		return  0.224F;
 	}
 
 	@Override

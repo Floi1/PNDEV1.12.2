@@ -92,7 +92,7 @@ public class BlockHemp extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genHempBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER))
 				biomeCriteria = true;
@@ -350,8 +350,8 @@ public class BlockHemp extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Flowering plant");
-				tooltip.add("Periods: Cretaceous - Paleogene  - Neogene - Pleistocene [- present]");
-				tooltip.add("Propagation: seeds");}
+				tooltip.add("Periods: Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+				tooltip.add("Propagation: Seeds");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

@@ -4,6 +4,7 @@ package net.lepidodendron.entity;
 import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
 import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronMod;
+import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.entity.ai.DietString;
 import net.lepidodendron.entity.ai.EatItemsEntityPrehistoricFloraAgeableBaseAI;
 import net.lepidodendron.entity.ai.EntityMateAIAgeableBase;
@@ -12,6 +13,8 @@ import net.lepidodendron.entity.base.EntityPrehistoricFloraNautiloidBase;
 import net.lepidodendron.entity.util.EnumCreatureAttributePN;
 import net.lepidodendron.entity.util.ITrappableWater;
 import net.lepidodendron.item.entities.ItemNautiloidEggsRayonnoceras;
+import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.ModTriggers;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -28,11 +31,13 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 
-public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNautiloidBase implements ITrappableWater {
+public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNautiloidBase implements ITrappableWater, IAdvancementGranter {
 
 	public BlockPos currentTarget;
 	@SideOnly(Side.CLIENT)
 	public ChainBuffer chainBuffer;
+	@SideOnly(Side.CLIENT)
+	public float bodyAngle;
 
 	public EntityPrehistoricFloraRayonnoceras(World world) {
 		super(world);
@@ -40,7 +45,7 @@ public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNa
 		minWidth = 0.1F;
 		maxWidth = 1.0F;
 		maxHeight = 0.99F;
-		maxHealthAgeable = 46.0D;
+		maxHealthAgeable = 7.0D;
 	}
 
 	@Override
@@ -64,7 +69,14 @@ public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNa
 
 	public static String getPeriod() {return "Carboniferous";}
 
-	//public static String getHabitat() {return "Aquatic";}
+	public boolean canBeVertical() {
+		//isReally in Water
+		boolean check1 = this.isReallyInWater();
+		int waterTest = Math.round(3 * this.getAgeScale());
+		boolean check2 = this.world.getBlockState(this.getPosition().up(waterTest)).getMaterial() != Material.WATER;
+
+		return check1 && !check2;
+	}
 
 	@Override
 	public boolean dropsEggs() {
@@ -83,7 +95,7 @@ public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNa
 
 	@Override
 	protected float getAISpeedNautiloid() {
-		return 0.1f;
+		return 0.05f;
 	}
 
 	protected void initEntityAI() {
@@ -138,6 +150,20 @@ public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNa
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		//this.renderYawOffset = this.rotationYaw;
+		if (this.world.isRemote) {
+			if (this.canBeVertical()) {
+				this.bodyAngle ++;
+			}
+			else {
+				this.bodyAngle --;
+			}
+			if (this.bodyAngle > 90) {
+				this.bodyAngle = 90;
+			}
+			if (this.bodyAngle < 0) {
+				this.bodyAngle = 0;
+			}
+		}
 		if (this.isEntityAlive() && isInWater()) {
 			if (this.isAtBottom()) {
 				//Feeding from bottom pose:
@@ -183,5 +209,11 @@ public class EntityPrehistoricFloraRayonnoceras extends EntityPrehistoricFloraNa
 			return LepidodendronMod.RAYONNOCERAS_LOOT_YOUNG;
 		}
 		return LepidodendronMod.RAYONNOCERAS_LOOT;
+	}
+
+	@Nullable
+	@Override
+	public CustomTrigger getModTrigger() {
+		return ModTriggers.CLICK_RAYONNOCERAS;
 	}
 }

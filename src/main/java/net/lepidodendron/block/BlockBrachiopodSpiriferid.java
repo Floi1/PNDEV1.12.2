@@ -9,6 +9,7 @@ import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronStatic;
 import net.lepidodendron.item.entities.ItemBivalveRaw;
 import net.lepidodendron.util.*;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.cambrian.BiomeCambrian;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
@@ -105,6 +106,30 @@ public class BlockBrachiopodSpiriferid extends ElementsLepidodendronMod.ModEleme
 		) {
 			dimensionCriteria = true;
 		}
+		if (dimID == LepidodendronConfig.dimSilurian) {
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimPrecambrian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimCambrian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimOrdovician){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimSilurian) {
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimDevonian){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimCarboniferous){
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimPermian){
+			dimensionCriteria = false;
+		}
 		if (!dimensionCriteria)
 			return;
 
@@ -128,7 +153,7 @@ public class BlockBrachiopodSpiriferid extends ElementsLepidodendronMod.ModEleme
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genBivalveBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -254,8 +279,13 @@ public class BlockBrachiopodSpiriferid extends ElementsLepidodendronMod.ModEleme
 			multiplier = 6;
 		}
 
+		double dimWeight = 1;
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_conulariid")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_conulariid_land")) {
+			multiplier = 10;
+			dimWeight = 0.5;
+		}
 
-		int dimWeight = 1;
 		if ((dimID == LepidodendronConfig.dimCarboniferous)
 				|| (dimID == LepidodendronConfig.dimTriassic)
 				|| (dimID == LepidodendronConfig.dimJurassic)
@@ -264,8 +294,8 @@ public class BlockBrachiopodSpiriferid extends ElementsLepidodendronMod.ModEleme
 			dimWeight = 2;
 		}
 
-		int minWaterDepth = 2 * dimWeight;
-		int maxWaterDepth = 12 * dimWeight;
+		int minWaterDepth = (int)(2D * dimWeight);
+		int maxWaterDepth = (int)(12D * dimWeight);
 		int startHeight = Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) - maxWaterDepth;
 
 
@@ -276,8 +306,12 @@ public class BlockBrachiopodSpiriferid extends ElementsLepidodendronMod.ModEleme
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 40; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up(random.nextInt(40));
 						if (Functions.isWater(world, blockpos1)) {
 							boolean waterDepthCheckMax = false;
 							boolean waterDepthCheckMin = true;
@@ -700,7 +734,7 @@ public class BlockBrachiopodSpiriferid extends ElementsLepidodendronMod.ModEleme
 		public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 			if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Marine shelled creature");
-				tooltip.add("Periods: late Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - mid-Jurassic");}
+				tooltip.add("Periods: Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic");}
 			super.addInformation(stack, player, tooltip, advanced);
 		}
 

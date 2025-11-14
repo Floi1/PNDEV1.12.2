@@ -94,7 +94,7 @@ public class BlockLygodium extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genLygodiumBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE))
 				biomeCriteria = true;
@@ -237,8 +237,8 @@ public class BlockLygodium extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Climbing vine-like fern");
-				tooltip.add("Periods: Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene");
-				tooltip.add("Propagation: spores");}
+				tooltip.add("Periods: Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+				tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

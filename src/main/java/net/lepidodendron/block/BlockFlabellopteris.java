@@ -155,7 +155,7 @@ public class BlockFlabellopteris extends ElementsLepidodendronMod.ModElement {
 
 		@Override
 		public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
-			return EnumPlantType.Desert;
+			return EnumPlantType.Plains;
 		}
 
 		@Override
@@ -168,8 +168,8 @@ public class BlockFlabellopteris extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Iridopteridales (?)/Rhacophytales (?) proto-plant");
-	        	tooltip.add("Periods: Devonian");
-	        	tooltip.add("Propagation: spores");}
+	        	tooltip.add("Periods: Late Devonian");
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

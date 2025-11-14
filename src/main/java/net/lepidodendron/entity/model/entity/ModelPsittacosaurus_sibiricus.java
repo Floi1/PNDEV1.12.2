@@ -387,12 +387,13 @@ public class ModelPsittacosaurus_sibiricus extends ModelBasePalaeopedia {
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
         this.body.offsetY = 0.1F;
-        this.body.offsetX = -0.1F;
+        this.body.offsetX = 0.0F;
+        this.body.offsetZ = 2.0F;
         this.body.rotateAngleY = (float)Math.toRadians(220);
         this.body.rotateAngleX = (float)Math.toRadians(12);
         this.body.rotateAngleZ = (float)Math.toRadians(-8);
         this.body.scaleChildren = true;
-        float scaler = 0.8F;
+        float scaler = 0.7F;
         this.body.setScale(scaler, scaler, scaler);
         //Start of pose:
 
@@ -531,6 +532,7 @@ public class ModelPsittacosaurus_sibiricus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.eye.setScale(1,1,1);
         EntityPrehistoricFloraPsittacosaurus_sibiricus ee = (EntityPrehistoricFloraPsittacosaurus_sibiricus) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {

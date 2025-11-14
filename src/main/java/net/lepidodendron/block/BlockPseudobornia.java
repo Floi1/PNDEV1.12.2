@@ -96,7 +96,7 @@ public class BlockPseudobornia extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genPseudoborniaBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER))
 				biomeCriteria = true;
@@ -116,9 +116,7 @@ public class BlockPseudobornia extends ElementsLepidodendronMod.ModElement {
 		if (LepidodendronConfig.dimDevonian == dimID) {
 			if (biome instanceof BiomeDevonian) {
 				BiomeDevonian biomeDevonian = (BiomeDevonian) biome;
-				if (biomeDevonian.getBiomeType() == EnumBiomeTypeDevonian.Forest
-						|| biomeDevonian.getBiomeType() == EnumBiomeTypeDevonian.Swamp
-						|| biomeDevonian.getBiomeType() == EnumBiomeTypeDevonian.Vale) {
+				if (biomeDevonian.getBiomeType() == EnumBiomeTypeDevonian.Forest) {
 					biomeCriteria = true;
 				}
 				else {
@@ -143,13 +141,10 @@ public class BlockPseudobornia extends ElementsLepidodendronMod.ModElement {
 			GenChance = 25;
 		}
 
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_swamp")) {
-			GenChance = 56;
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_vale")
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_hills")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_creek_forest")
 		)
-			GenChance = 96;
+			GenChance = 76;
 
 		int maxheight = LepidodendronConfigPlants.maxheightPseudobornia;
 		int minheight = LepidodendronConfigPlants.minheightPseudobornia;
@@ -395,8 +390,8 @@ public class BlockPseudobornia extends ElementsLepidodendronMod.ModElement {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Horsetail shrub");
 	        tooltip.add("Periods: Devonian");
-			tooltip.add("Note: plant near water");
-	        tooltip.add("Propagation: spores");}
+			tooltip.add("Note: Plant near water");
+	        tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 	    

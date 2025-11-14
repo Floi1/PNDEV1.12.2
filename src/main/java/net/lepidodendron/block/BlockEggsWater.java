@@ -90,10 +90,46 @@ public class BlockEggsWater extends ElementsLepidodendronMod.ModElement {
 			Biome biome = world.getBiome(new BlockPos(l6, i11, l14));
 			for (String mob : waterLayingMobs) {
 				String spawnMob = mob;
-				if (spawnMob.indexOf("_nymph") >= 1) {
+				if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@stonefly")) {
+					spawnMob = "lepidodendron:prehistoric_flora_stonefly";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@mayfly")) {
+					spawnMob = "lepidodendron:prehistoric_flora_mayfly";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@velisoptera")) {
+					spawnMob = "lepidodendron:prehistoric_flora_velisoptera";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@argentinala")) {
+					spawnMob = "lepidodendron:prehistoric_flora_argentinala";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@damselfly")) {
+					spawnMob = "lepidodendron:prehistoric_flora_damselfly";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@cratopipa")) {
+					spawnMob = "lepidodendron:prehistoric_flora_cratopipa";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@prosalirus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_prosalirus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@notobatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_notobatrachus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@rhadinosteus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_rhadinosteus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@hygobatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_hygobatrachus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@kururubatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_kururubatrachus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@genibatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_kururubatrachus";
+				}
+				else if (spawnMob.indexOf("_nymph") >= 1) {
 					spawnMob = spawnMob.replace("_nymph", "");
 				}
-				if (mob.contains("lepidodendron:prehistoric_flora_dragonfly")) {
+				else if (mob.contains("lepidodendron:prehistoric_flora_dragonfly")) {
 					spawnMob = "lepidodendron:prehistoric_flora_dragonfly";
 				}
 				if (SpawnLocations.spawnsHere(spawnMob, biome.getRegistryName().toString())) {
@@ -231,8 +267,10 @@ public class BlockEggsWater extends ElementsLepidodendronMod.ModElement {
 			"lepidodendron:prehistoric_flora_whatcheeria",
 			"lepidodendron:prehistoric_flora_wodnika",
 			"lepidodendron:prehistoric_flora_xenacanthus",
+            "lepidodendron:prehistoric_flora_orthacanthus",
 
-			"lepidodendron:prehistoric_flora_archeria",
+
+            "lepidodendron:prehistoric_flora_archeria",
 			"lepidodendron:prehistoric_flora_nigerpeton",
 			"lepidodendron:prehistoric_flora_acherontiscus",
 			"lepidodendron:prehistoric_flora_anthracosaurus",
@@ -248,8 +286,20 @@ public class BlockEggsWater extends ElementsLepidodendronMod.ModElement {
 			"lepidodendron:prehistoric_flora_onchopristis",
 			"lepidodendron:prehistoric_flora_egertonodus",
 			"lepidodendron:prehistoric_flora_thaiodus",
-			"lepidodendron:prehistoric_flora_microbrachis"
-	};
+			"lepidodendron:prehistoric_flora_microbrachis",
+			"lepidodendron:prehistoric_flora_cretalamna",
+			"lepidodendron:prehistoric_flora_valdotriton",
+			"lepidodendron:prehistoric_flora_aquaticnymph@stonefly",
+			"lepidodendron:prehistoric_flora_aquaticnymph@mayfly",
+			"lepidodendron:prehistoric_flora_aquaticnymph@velisoptera",
+			"lepidodendron:prehistoric_flora_aquaticnymph@argentinala",
+			"lepidodendron:prehistoric_flora_aquaticnymph@damselfly",
+			"lepidodendron:prehistoric_flora_trypanognathus",
+            "lepidodendron:prehistoric_flora_brachydectes",
+            "lepidodendron:prehistoric_flora_leptostyrax",
+            "lepidodendron:prehistoric_flora_gerobatrachus"
+
+    };
 
 	public static final PropertyInteger LEVEL = PropertyInteger.create("level", 0, 15);
 

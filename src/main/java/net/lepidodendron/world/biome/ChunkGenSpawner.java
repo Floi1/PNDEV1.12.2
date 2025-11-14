@@ -8,12 +8,16 @@ import net.lepidodendron.entity.EntityPrehistoricFloraDragonfly;
 import net.lepidodendron.entity.EntityPrehistoricFloraHaldanodon;
 import net.lepidodendron.entity.base.*;
 import net.lepidodendron.util.Functions;
+import net.lepidodendron.util.MaterialLatex;
+import net.lepidodendron.util.MaterialResin;
 import net.minecraft.block.BlockLeaves;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
@@ -25,6 +29,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fluids.BlockFluidBase;
+import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -113,7 +119,7 @@ public class ChunkGenSpawner extends ElementsLepidodendronMod.ModElement {
                         || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_river")
                         || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_river")
                         || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_ocean_coral")
-                        || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cambrian_sea_reefs")
+                        || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cambrian_foreshore")
                         || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_bryozoan_reef")
                         || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_algal_reef")
                         || biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:silurian_sea_garden")
@@ -320,6 +326,10 @@ public class ChunkGenSpawner extends ElementsLepidodendronMod.ModElement {
                                                     //System.err.println(mobToSpawn + " in ID " + locationID);
                                                     EntityEntry ee = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(mobToSpawn));
                                                     EntityLiving entity = (EntityLiving) ee.newInstance(world);
+                                                    if (entity == null) {
+                                                        System.err.println("Could not construct Entity to spawn: " + mobToSpawn);
+                                                        continue;
+                                                    }
                                                     int offsetter = 0;
 
                                                     switch (locationID) {
@@ -330,20 +340,45 @@ public class ChunkGenSpawner extends ElementsLepidodendronMod.ModElement {
                                                             offsetter = 2; //Trying to help avoid spawning into cliffsides :/
                                                             //System.err.println("Case: 1");
                                                             //We'll check a block is the biome topblock and that there are at least 4 blocks of non-solid blocks above it:
-                                                            BlockPos pos1 = world.getTopSolidOrLiquidBlock(new BlockPos(spawnPos.getX(), 0, spawnPos.getZ()));
+                                                            BlockPos pos1 = getTopSolidBlock(spawnPos, world).up();
                                                             //pos1 = world.getTopSolidOrLiquidBlock(new BlockPos(pos.getX() + k7, 0, pos.getZ() + j11));
+                                                            float heightEntity = entity.height;
+                                                            if (entity instanceof EntityPrehistoricFloraAgeableBase) {
+                                                                heightEntity = ((EntityPrehistoricFloraAgeableBase)entity).getMaxHeight();
+                                                            }
+                                                            heightEntity = (float)Math.ceil(heightEntity) - 1;
+                                                            boolean flagHeight = false;
+                                                            for (int heightTest = 0; heightTest <= heightEntity; heightTest++) {
+                                                                flagHeight = world.getBlockState(pos1.up(heightTest)).causesSuffocation();
+                                                                if (flagHeight) {
+                                                                    break;
+                                                                }
+                                                            }
                                                             if (
                                                                     world.getBlockState(pos1.down()).getBlock().isSideSolid(world.getBlockState(pos1.down()), world, pos1.down(), EnumFacing.UP)
-                                                                            && (world.getBlockState(pos1.down()).getMaterial() != Material.WOOD)
-                                                                            && ((world.isAirBlock(pos1)) || (world.getBlockState(pos1).getMaterial() == Material.PLANTS))
-                                                                            && ((world.isAirBlock(pos1.up())) || (world.getBlockState(pos1.up()).getMaterial() == Material.PLANTS))
-                                                                            && ((world.isAirBlock(pos1.up(2))) || (world.getBlockState(pos1.up(2)).getMaterial() == Material.PLANTS))
-                                                                            && ((world.isAirBlock(pos1.up(3))) || (world.getBlockState(pos1.up(3)).getMaterial() == Material.PLANTS))
+                                                                            //&& (world.getBlockState(pos1.down()).getMaterial() != Material.WOOD)
+                                                                            && (!flagHeight)
+                                                                            && (!(world.getBlockState(pos1).getBlock() instanceof BlockFluidBase))
+                                                                            && (!(world.getBlockState(pos1).getBlock() instanceof IFluidBlock))
+                                                                            && (!(world.getBlockState(pos1).getBlock() instanceof BlockLiquid))
+                                                                            && world.getBlockState(pos1).getMaterial() != Material.WATER
+                                                                            && world.getBlockState(pos1).getMaterial() != MaterialResin.RESIN
+                                                                            && world.getBlockState(pos1).getMaterial() != MaterialLatex.LATEX
                                                             ) {
                                                                 if (locationID == 1) {
-                                                                    posCheck = true;
-                                                                    //System.err.println("Spawnable " + checkEntity);
-                                                                    spawnPos = pos1;
+                                                                    if (world.getBiome(pos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_estuary")
+                                                                        || world.getBiome(pos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_estuary")) {
+                                                                        if (pos1.getY() >= Functions.getAdjustedSeaLevel(world, pos1) + 1) { //In this biome the requirement for land spawn is one block higher
+                                                                            posCheck = true;
+                                                                            //System.err.println("Spawnable " + checkEntity);
+                                                                            spawnPos = pos1;
+                                                                        }
+                                                                    }
+                                                                    else {
+                                                                        posCheck = true;
+                                                                        //System.err.println("Spawnable " + checkEntity);
+                                                                        spawnPos = pos1;
+                                                                    }
                                                                 }
                                                                 else if (locationID == 8) {
                                                                     //Check for water:
@@ -1540,7 +1575,8 @@ public class ChunkGenSpawner extends ElementsLepidodendronMod.ModElement {
             blockpos1 = blockpos.down();
             IBlockState state = chunk.getBlockState(blockpos1);
 
-            if (state.getMaterial().blocksMovement())
+            if (state.getMaterial().blocksMovement()
+                && state.getBlock() != Blocks.SNOW_LAYER)
             {
                 break;
             }
@@ -1564,6 +1600,7 @@ public class ChunkGenSpawner extends ElementsLepidodendronMod.ModElement {
                     && state.getMaterial() != Material.WATER
                     && state.getMaterial() != Material.ICE
                     && state.getMaterial() != Material.PACKED_ICE
+                    && state.getBlock() != Blocks.SNOW_LAYER
                     && state.getMaterial() != Material.LEAVES
                     && state.getMaterial() != Material.WOOD
                     && state.getMaterial() != Material.VINE

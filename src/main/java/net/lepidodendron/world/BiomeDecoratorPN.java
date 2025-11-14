@@ -20,8 +20,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeDecorator;
-import net.minecraft.world.gen.feature.WorldGenDeadBush;
 import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.WorldGenDeadBush;
 
 import java.util.Random;
 
@@ -347,7 +347,8 @@ public class BiomeDecoratorPN extends BiomeDecorator {
             hillsBiome = ((BiomeSilurian)biomeIn).getBiomeType() == EnumBiomeTypeSilurian.BarrenLand;
         }
         if (biomeIn instanceof BiomeDevonian) {
-            hillsBiome = ((BiomeDevonian)biomeIn).getBiomeType() == EnumBiomeTypeDevonian.Mountains;
+            hillsBiome = ((BiomeDevonian)biomeIn).getBiomeType() == EnumBiomeTypeDevonian.Mountains
+                || ((BiomeDevonian)biomeIn).getBiomeType() == EnumBiomeTypeDevonian.MountainsEarly;
             if (hillsBiome) {
                 hillsBiomeSilkverfish = true;
             }

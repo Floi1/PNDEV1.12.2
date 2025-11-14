@@ -9,9 +9,9 @@ import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronStatic;
 import net.lepidodendron.item.entities.ItemBivalveRaw;
 import net.lepidodendron.util.CustomTrigger;
-import net.lepidodendron.util.EnumBiomeTypeCarboniferous;
 import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
@@ -112,7 +112,7 @@ public class BlockBrachiopodGigantoproductus extends ElementsLepidodendronMod.Mo
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genBivalveBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -128,14 +128,8 @@ public class BlockBrachiopodGigantoproductus extends ElementsLepidodendronMod.Mo
 
 		if (biome instanceof BiomeCarboniferous)
 		{
-			BiomeCarboniferous biomeCarb = (BiomeCarboniferous) biome;
-			if (biomeCarb.getBiomeType() == EnumBiomeTypeCarboniferous.Ocean
-					|| biomeCarb.getBiomeType() == EnumBiomeTypeCarboniferous.Bay) {
-				biomeCriteria = true;
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
+
 		}
 
 		if (!biomeCriteria)
@@ -166,8 +160,12 @@ public class BlockBrachiopodGigantoproductus extends ElementsLepidodendronMod.Mo
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 40; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+					for (int i = 0; i < 11; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up(random.nextInt(40));
 						if (Functions.isWater(world, blockpos1)) {
 							boolean waterDepthCheckMax = false;
 							boolean waterDepthCheckMin = true;
@@ -200,6 +198,7 @@ public class BlockBrachiopodGigantoproductus extends ElementsLepidodendronMod.Mo
 										|| (world.getBlockState(pos1).getMaterial() == Material.ROCK && world.getBlockState(pos1).getBlock() != Blocks.MAGMA)
 										|| (world.getBlockState(pos1).getMaterial() == Material.GROUND)
 										|| (world.getBlockState(pos1).getMaterial() == Material.CORAL)
+										|| (world.getBlockState(pos1).getMaterial() == Material.SPONGE)
 										|| (world.getBlockState(pos1).getMaterial() == Material.CLAY))
 										&& (world.getBlockState(pos1).getBlockFaceShape(world, pos1, EnumFacing.UP) == BlockFaceShape.SOLID)) {
 									world.setBlockState(blockpos1, block.getDefaultState().withProperty(BlockBivalveCream.BlockCustom.FACING, enumfacing), 2);

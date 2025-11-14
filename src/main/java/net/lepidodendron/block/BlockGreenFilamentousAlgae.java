@@ -7,6 +7,7 @@ import net.lepidodendron.item.ItemGreenFilamentousAlgaeItem;
 import net.lepidodendron.util.*;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
+import net.lepidodendron.world.biome.devonian.BiomeDevonian;
 import net.lepidodendron.world.biome.jurassic.BiomeJurassic;
 import net.lepidodendron.world.biome.permian.BiomePermian;
 import net.lepidodendron.world.biome.triassic.BiomeTriassic;
@@ -28,9 +29,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -64,7 +63,7 @@ public class BlockGreenFilamentousAlgae extends ElementsLepidodendronMod.ModElem
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genFilamentousAlgaeBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -92,6 +91,15 @@ public class BlockGreenFilamentousAlgae extends ElementsLepidodendronMod.ModElem
 		{
 			biomeCriteria = true;
 		}
+
+		if (biome instanceof BiomeDevonian)
+		{
+			BiomeDevonian biomeDevonian = (BiomeDevonian) biome;
+			if (biomeDevonian.getBiomeType() == EnumBiomeTypeDevonian.Ocean) {
+				biomeCriteria = false;
+			}
+		}
+
 		if (biome instanceof BiomePermian)
 		{
 			BiomePermian biomePermian = (BiomePermian) biome;
@@ -119,8 +127,8 @@ public class BlockGreenFilamentousAlgae extends ElementsLepidodendronMod.ModElem
 		if (biome instanceof BiomeTriassic)
 		{
 			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Warm
-				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Swamp) {
+			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Chinle
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Europe) {
 				biomeCriteria = true;
 			}
 			else {
@@ -210,7 +218,12 @@ public class BlockGreenFilamentousAlgae extends ElementsLepidodendronMod.ModElem
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_brackish")) {
 			GenChance = 156;
 		}
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_swamp")) {
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_swamp")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_creek_swamp")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_springs")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_lagoon")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_lagoon_helper")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_algae")) {
 			GenChance = 192;
 		}
 		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_mire")
@@ -383,6 +396,32 @@ public class BlockGreenFilamentousAlgae extends ElementsLepidodendronMod.ModElem
 		            world.scheduleUpdate(pos, this, 1);
 		        }
 		    }
+		}
+
+		@Override
+		public EnumOffsetType getOffsetType()
+		{
+			return EnumOffsetType.XYZ;
+		}
+
+		@Override
+		public Vec3d getOffset(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+		{
+			Block.EnumOffsetType block$enumoffsettype = this.getOffsetType();
+
+			if (block$enumoffsettype == Block.EnumOffsetType.NONE)
+			{
+				return Vec3d.ZERO;
+			}
+			else
+			{
+				long i = MathHelper.getCoordinateRandom(pos.getX(), 0, pos.getZ());
+				return new Vec3d(((double)((float)(i >> 16 & 15L) / 15.0F) - 0.5D) * 0.5D,
+						block$enumoffsettype == Block.EnumOffsetType.XYZ ?
+								((((double)((float)(i >> 20 & 15L) / 15.0F) - 0.250D) * 0.099D) + (((double)((float)(i >> 16 & 15L) / 15.0F) - 0.250D) * 0.099D) + (((double)((float)(i >> 24 & 15L) / 15.0F) - 0.250D) * 0.099D)) / 3.0
+								: 0.0D,
+						((double)((float)(i >> 24 & 15L) / 15.0F) - 0.5D) * 0.5D);
+			}
 		}
 
 		@Override

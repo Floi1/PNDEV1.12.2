@@ -82,12 +82,11 @@ public class BlockFernEpiphyte extends ElementsLepidodendronMod.ModElement {
 		OreDictionary.registerOre("plant", BlockFernEpiphyte.block);
 	}
 
-
 	@Override
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {		
 			
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genFernEpiphyteBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST))
 				biomeCriteria = true;
@@ -130,8 +129,10 @@ public class BlockFernEpiphyte extends ElementsLepidodendronMod.ModElement {
 		if (biome instanceof BiomeTriassic)
 		{
 			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Cool
-				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Swamp) {
+			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.SouthAmericaAusAnt
+					|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.SouthAfricaMadagascar
+					|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Europe
+					|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Chinle) {
 				biomeCriteria = true;
 			}
 			else {
@@ -204,14 +205,14 @@ public class BlockFernEpiphyte extends ElementsLepidodendronMod.ModElement {
 		//Is this a transformed biome?
 		if (LepidodendronDecorationHandler.matchBiome(biome, LepidodendronConfigPlants.genTransformBiomes)) {
 			//if (biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":")).equalsIgnoreCase("minecraft"))
-				GenChance = Math.min(GenChance * 10, 100);
+			GenChance = Math.min(GenChance * 10, 100);
 		}
 		
 		for (int i = 0; i < (int) GenChance; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
 			int l14 = chunkZ + random.nextInt(16) + 8;
-			int yMin = world.getChunk(chunkX, chunkZ).getHeight(new BlockPos(l6, 0, l14));
-			int yMax = world.getChunk(chunkX, chunkZ).getHeight(new BlockPos(l6, 0, l14)) + 50;
+			int yMin = world.getChunk(new BlockPos(l6, 0, l14)).getHeight(new BlockPos(l6, 0, l14));
+			int yMax = world.getChunk(new BlockPos(l6, 0, l14)).getHeight(new BlockPos(l6, 0, l14)) + 50;
 			int i11 = yMin + random.nextInt(yMax - yMin);
 			(new FernEpiphyteGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
@@ -452,8 +453,8 @@ public class BlockFernEpiphyte extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Fern epiphytic plant");
-	        	tooltip.add("Periods: Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene [- present]");
-	        	tooltip.add("Propagation: spores");}
+	        	tooltip.add("Periods: Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

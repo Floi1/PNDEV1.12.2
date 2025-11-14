@@ -4,8 +4,8 @@ package net.lepidodendron.block;
 import net.lepidodendron.*;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.EnumBiomeTypeOrdovician;
-import net.lepidodendron.util.EnumBiomeTypeTriassic;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
+import net.lepidodendron.world.biome.devonian.BiomeDevonian;
 import net.lepidodendron.world.biome.jurassic.BiomeJurassic;
 import net.lepidodendron.world.biome.ordovician.BiomeOrdovician;
 import net.lepidodendron.world.biome.precambrian.BiomePrecambrian;
@@ -13,6 +13,7 @@ import net.lepidodendron.world.biome.triassic.BiomeTriassic;
 import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -39,6 +40,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -89,7 +91,7 @@ public class BlockWaterBottomGunk extends ElementsLepidodendronMod.ModElement {
 		}
 		
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genUnderwaterGunkBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -102,12 +104,12 @@ public class BlockWaterBottomGunk extends ElementsLepidodendronMod.ModElement {
 		}
 		if (matchBiome(biome, LepidodendronConfigPlants.genUnderwaterGunkOverrideBiomes))
 			biomeCriteria = true;
-		if ((dimID == LepidodendronConfig.dimDevonian)
-				|| (dimID == LepidodendronConfig.dimSilurian)
+		if ((dimID == LepidodendronConfig.dimSilurian)
 				|| (dimID == LepidodendronConfig.dimCarboniferous)
 				|| (dimID == LepidodendronConfig.dimCambrian)
 				//|| (dimID == LepidodendronConfig.dimPrecambrian)
 				|| (dimID == LepidodendronConfig.dimPermian)
+				|| (dimID == LepidodendronConfig.dimTriassic)
 		) {
 			biomeCriteria = false;
 		}
@@ -116,33 +118,23 @@ public class BlockWaterBottomGunk extends ElementsLepidodendronMod.ModElement {
 
 		if (biome instanceof BiomePrecambrian)
 		{
-			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ediacaran_trench")) {
-				multiplier = 30;
-			}
-			biomeCriteria = true;
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomeOrdovician)
 		{
-			BiomeOrdovician biomeOrdovician = (BiomeOrdovician) biome;
-			if (biomeOrdovician.getBiomeType() == EnumBiomeTypeOrdovician.Algae
-				|| biomeOrdovician.getBiomeType() == EnumBiomeTypeOrdovician.Bog) {
-				biomeCriteria = true;
-			}
-			else {
+			biomeCriteria = false;
+
+		}
+
+		if (biome instanceof BiomeDevonian)
+		{
 				biomeCriteria = false;
-			}
 		}
 
 		if (biome instanceof BiomeTriassic)
 		{
-			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Ocean) {
-				biomeCriteria = true;
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomeJurassic)
@@ -184,7 +176,7 @@ public class BlockWaterBottomGunk extends ElementsLepidodendronMod.ModElement {
 				multiplier = 12;
 			}
 		}
-		if ((dimID == LepidodendronConfig.dimJurassic)
+		if ((dimID == LepidodendronConfig.dimJurassic || dimID == LepidodendronConfig.dimDevonian)
 		) {
 			multiplier = 10;
 		}
@@ -549,14 +541,14 @@ public class BlockWaterBottomGunk extends ElementsLepidodendronMod.ModElement {
 	    }
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	}
 }

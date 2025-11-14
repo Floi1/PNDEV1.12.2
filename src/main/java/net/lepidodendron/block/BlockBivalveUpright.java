@@ -6,6 +6,7 @@ import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronConfigPlants;
 import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.util.*;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
@@ -93,6 +94,13 @@ public class BlockBivalveUpright extends ElementsLepidodendronMod.ModElement {
 		) {
 			dimensionCriteria = true;
 		}
+		if (dimID == LepidodendronConfig.dimTriassic
+		) {
+			dimensionCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimJurassic){
+			dimensionCriteria = false;
+		}
 		if (!dimensionCriteria)
 			return;
 
@@ -117,7 +125,7 @@ public class BlockBivalveUpright extends ElementsLepidodendronMod.ModElement {
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genBivalveBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -233,8 +241,12 @@ public class BlockBivalveUpright extends ElementsLepidodendronMod.ModElement {
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 40; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(6) - random.nextInt(6), 0, random.nextInt(6) - random.nextInt(6));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(6) - random.nextInt(6), 0, random.nextInt(6) - random.nextInt(6));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up();
 						if (Functions.isWater(world, blockpos1)) {
 							boolean waterDepthCheckMax = false;
 							boolean waterDepthCheckMin = true;
@@ -266,6 +278,7 @@ public class BlockBivalveUpright extends ElementsLepidodendronMod.ModElement {
 									|| (world.getBlockState(pos1).getMaterial() == Material.ROCK && world.getBlockState(pos1).getBlock() != Blocks.MAGMA)
 									|| (world.getBlockState(pos1).getMaterial() == Material.GROUND)
 									|| (world.getBlockState(pos1).getMaterial() == Material.CORAL)
+                                    || (world.getBlockState(pos1).getMaterial() == Material.SPONGE)
 									|| (world.getBlockState(pos1).getMaterial() == Material.CLAY))
 									&& (world.getBlockState(pos1).getBlockFaceShape(world, pos1, EnumFacing.UP) == BlockFaceShape.SOLID)) {
 									world.setBlockState(blockpos1, block.getDefaultState().withProperty(BlockBivalveUpright.BlockCustom.FACING, enumfacing), 2);
@@ -354,7 +367,7 @@ public class BlockBivalveUpright extends ElementsLepidodendronMod.ModElement {
 		public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 			if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Marine bivalve");
-				tooltip.add("Periods: Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene");}
+				tooltip.add("Periods: Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");}
 			super.addInformation(stack, player, tooltip, advanced);
 		}
 

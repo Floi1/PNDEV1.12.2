@@ -9,7 +9,7 @@
 			"trigger": "lepidodendron:pf_adv_book_choia",
 			"title": "Choiid",
 			"type": "quest",
-			"text": "$(l)Temporal Range:$() Cambrian-Silurian$(br2)>Porifera$(br)>Demospongiae$(br)>Protomonaxonida"
+			"text": "$(l)Temporal Range:$() Cambrian - Silurian$(br2)$(l)Habitat:$() Marine$(br2)>Porifera$(br)>Demospongiae$(br)>Protomonaxonida"
 		},
 		{
 			"type": "multiblock",
@@ -29,7 +29,7 @@
 		{
 			"advancement": "lepidodendron:pf_adv_book_choia",
 			"type": "text",
-			"text": "Choiids hail from the Middle Cambrian into the Lower Silurian, with fossils found in the Burgess Shale, Canada; Maotianshan shales, China; Wheeler Shale, USA and Fezouata formation, Morocco. It is conical shaped sponge with a myriad of spines radiating out, suspended above the seafloor by stalk-like spines, and grew up to 3 cm in diameter."
+			"text": "Choiids hail from the Middle Cambrian into the early Silurian, with fossils found in the Burgess Shale, Canada; Maotianshan shales, China; Wheeler Shale, USA and Fezouata formation, Morocco. It is conical shaped sponge with a myriad of spines radiating out, suspended above the seafloor by stalk-like spines, and grew up to 3 cm in diameter."
 		},
 		{
 			"advancement": "lepidodendron:pf_adv_book_choia",

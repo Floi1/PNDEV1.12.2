@@ -96,7 +96,7 @@ public class BlockCrinoidScyphocrinus extends ElementsLepidodendronMod.ModElemen
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genCrinoidBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -131,6 +131,9 @@ public class BlockCrinoidScyphocrinus extends ElementsLepidodendronMod.ModElemen
 				biomeCriteria = true;
 			}
 			else {
+				biomeCriteria = false;
+			}
+			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_algae")) {
 				biomeCriteria = false;
 			}
 		}

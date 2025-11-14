@@ -160,6 +160,7 @@ public class WorldGenAncientMoss extends WorldGenerator
 					"lepidodendron:prehistoric_flora_archocyrtus",
 					"lepidodendron:prehistoric_flora_arthropleura",
 					"lepidodendron:prehistoric_flora_attercopus",
+					"lepidodendron:prehistoric_flora_permarachne",
 					"lepidodendron:prehistoric_flora_daohugoucossus",
 					"lepidodendron:prehistoric_flora_gerarus",
 					"lepidodendron:prehistoric_flora_harvestman",
@@ -177,16 +178,66 @@ public class WorldGenAncientMoss extends WorldGenerator
 					"lepidodendron:prehistoric_flora_trigonotarbid_palaeocharinus",
 					"lepidodendron:prehistoric_flora_trigonotarbid_palaeotarbus",
 					"lepidodendron:prehistoric_flora_trigonotarbid_permotarbus",
-					"lepidodendron:prehistoric_flora_trigonotarbid_gondwanarachne"
+					"lepidodendron:prehistoric_flora_trigonotarbid_gondwanarachne",
+					"lepidodendron:prehistoric_flora_permarachne",
+					"lepidodendron:prehistoric_flora_myriapod@latzelia",
+					"lepidodendron:prehistoric_flora_myriapod@crussolum",
+					"lepidodendron:prehistoric_flora_myriapod@devonobius",
+					"lepidodendron:prehistoric_flora_myriapod@fulmenocursor",
+					"lepidodendron:prehistoric_flora_myriapod@velocipede",
+					"lepidodendron:prehistoric_flora_myriapod@polydesmid",
+					"lepidodendron:prehistoric_flora_myriapod@juliform",
+					"lepidodendron:prehistoric_flora_santanmantis",
+					"lepidodendron:prehistoric_flora_scorpionfly",
+					"lepidodendron:prehistoric_flora_hangingfly",
+					"lepidodendron:prehistoric_flora_fortiholcorpa",
+					"lepidodendron:prehistoric_flora_juracimbrophlebia",
+					"lepidodendron:prehistoric_flora_cretosaja"
 			};
 
 			ArrayList<String> mobStringValid = new ArrayList<String>();
 			for (String mob : mobString) {
 				String spawnMob = mob;
-				if (spawnMob.indexOf("_nymph") >= 1) {
+				if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@stonefly")) {
+					spawnMob = "lepidodendron:prehistoric_flora_stonefly";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@mayfly")) {
+					spawnMob = "lepidodendron:prehistoric_flora_mayfly";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@velisoptera")) {
+					spawnMob = "lepidodendron:prehistoric_flora_velisoptera";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@argentinala")) {
+					spawnMob = "lepidodendron:prehistoric_flora_argentinala";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_aquaticnymph@damselfly")) {
+					spawnMob = "lepidodendron:prehistoric_flora_damselfly";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@cratopipa")) {
+					spawnMob = "lepidodendron:prehistoric_flora_cratopipa";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@prosalirus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_prosalirus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@notobatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_notobatrachus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@rhadinosteus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_rhadinosteus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@hygobatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_hygobatrachus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@kururubatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_kururubatrachus";
+				}
+				else if (spawnMob.equalsIgnoreCase("lepidodendron:prehistoric_flora_tadpole@genibatrachus")) {
+					spawnMob = "lepidodendron:prehistoric_flora_kururubatrachus";
+				}
+				else if (spawnMob.indexOf("_nymph") >= 1) {
 					spawnMob = spawnMob.replace("_nymph", "");
 				}
-				if (mob.contains("lepidodendron:prehistoric_flora_dragonfly")) {
+				else if (mob.contains("lepidodendron:prehistoric_flora_dragonfly")) {
 					spawnMob = "lepidodendron:prehistoric_flora_dragonfly";
 				}
 				if (SpawnLocations.spawnsHere(spawnMob, biome.getRegistryName().toString())) {

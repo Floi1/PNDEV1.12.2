@@ -426,6 +426,7 @@ public class ModelKnoetschkesuchus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.eye.setScale(1,1,1);
         EntityPrehistoricFloraKnoetschkesuchus ee = (EntityPrehistoricFloraKnoetschkesuchus) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {
@@ -3437,7 +3438,7 @@ public class ModelKnoetschkesuchus extends ModelBasePalaeopedia {
             animator.startKeyframe(5);
             animator.rotate(this.neck2, (float) Math.toRadians(8), (float) Math.toRadians(0), (float) Math.toRadians(0));
             animator.rotate(this.head, (float) Math.toRadians(-5), (float) Math.toRadians(0), (float) Math.toRadians(0));
-            animator.rotate(this.jaw, (float) -Math.toRadians(36), (float) Math.toRadians(0), (float) Math.toRadians(0));
+            animator.rotate(this.jaw, (float) Math.toRadians(36), (float) Math.toRadians(0), (float) Math.toRadians(0));
             animator.endKeyframe();
             animator.setStaticKeyframe(5);
             animator.startKeyframe(2);

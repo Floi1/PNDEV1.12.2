@@ -619,17 +619,17 @@ public class ModelDicraeosaurus extends ModelBasePalaeopedia {
     @Override
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
-        this.root.offsetY = 0.8F;
-        this.root.offsetX = -0.25F;
+        this.root.offsetY = 0.4F;
+        this.root.offsetX = 0.5F;
+        this.root.offsetZ = 6.0F;
         this.root.rotateAngleY = (float)Math.toRadians(-68);
         this.root.rotateAngleX = (float)Math.toRadians(15);
         this.root.rotateAngleZ = (float)Math.toRadians(-10);
         this.root.scaleChildren = true;
-        float scaler = 0.35F;
+        float scaler = 0.55F;
         this.root.setScale(scaler, scaler, scaler);
         //Start of pose:
-
-
+        this.setRotateAngle(root, -0.2F, 6.8F, -0.0F);
         //End of pose, now render the model:
         this.root.render(f);
         //Reset rotations, positions and sizing:
@@ -738,6 +738,9 @@ public class ModelDicraeosaurus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.throat.setScale(1,1,1);
+        this.throat2.setScale(1,1,1);
+        this.chest.setScale(1,1,1);
         EntityPrehistoricFloraDicraeosaurus ee = (EntityPrehistoricFloraDicraeosaurus) entitylivingbaseIn;
 
         //if (!ee.isInWater()) {

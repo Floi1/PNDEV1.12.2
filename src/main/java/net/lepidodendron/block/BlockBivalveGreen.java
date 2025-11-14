@@ -6,6 +6,7 @@ import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronConfigPlants;
 import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.util.*;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
@@ -118,7 +119,7 @@ public class BlockBivalveGreen extends ElementsLepidodendronMod.ModElement {
 		}
 
 		boolean biomeCriteria = true;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genBivalveBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = false;
@@ -142,7 +143,9 @@ public class BlockBivalveGreen extends ElementsLepidodendronMod.ModElement {
 		if (biome instanceof BiomeDevonian)
 		{
 			BiomeDevonian biomeDev = (BiomeDevonian) biome;
-			if (biomeDev.getBiomeType() != EnumBiomeTypeDevonian.Ocean && biomeDev.getBiomeType() != EnumBiomeTypeDevonian.Hypersaline) {
+			if (biomeDev.getBiomeType() != EnumBiomeTypeDevonian.Ocean
+					&& biomeDev.getBiomeType() != EnumBiomeTypeDevonian.Hypersaline
+					&& biomeDev.getBiomeType() != EnumBiomeTypeDevonian.Lagoon) {
 				biomeCriteria = true;
 			}
 			else {
@@ -175,7 +178,7 @@ public class BlockBivalveGreen extends ElementsLepidodendronMod.ModElement {
 		{
 			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
 			if (biomeTriassic.getBiomeType() != EnumBiomeTypeTriassic.Ocean
-				&& biomeTriassic.getBiomeType() != EnumBiomeTypeTriassic.Island) {
+				&& biomeTriassic.getBiomeType() != EnumBiomeTypeTriassic.China) {
 				biomeCriteria = true;
 			}
 			else {
@@ -212,6 +215,18 @@ public class BlockBivalveGreen extends ElementsLepidodendronMod.ModElement {
 			}
 		}
 
+		if (dimID == LepidodendronConfig.dimCarboniferous){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimPermian){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimTriassic){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimJurassic){
+			biomeCriteria = false;
+		}
 		if (!biomeCriteria)
 			return;
 
@@ -246,8 +261,12 @@ public class BlockBivalveGreen extends ElementsLepidodendronMod.ModElement {
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 40; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(6) - random.nextInt(6), 0, random.nextInt(6) - random.nextInt(6));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(6) - random.nextInt(6), 0, random.nextInt(6) - random.nextInt(6));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up();
 						if (Functions.isWater(world, blockpos1)) {
 							boolean waterDepthCheckMax = false;
 							boolean waterDepthCheckMin = true;
@@ -367,7 +386,7 @@ public class BlockBivalveGreen extends ElementsLepidodendronMod.ModElement {
 		public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 			if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Freshwater bivalve");
-				tooltip.add("Periods: Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene");}
+				tooltip.add("Periods: Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");}
 			super.addInformation(stack, player, tooltip, advanced);
 		}
 

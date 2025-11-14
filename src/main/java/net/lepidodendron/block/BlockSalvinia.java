@@ -74,7 +74,7 @@ public class BlockSalvinia extends ElementsLepidodendronMod.ModElement {
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genSalviniaBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -462,11 +462,11 @@ public class BlockSalvinia extends ElementsLepidodendronMod.ModElement {
 	    		return false;
 	    	}
 
-	    	double getLight = worldIn.getLight(pos);
-	    	if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
-	    	{
-	    		return false;
-	    	}
+//	    	double getLight = worldIn.getLight(pos);
+//	    	if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
+//	    	{
+//	    		return false;
+//	    	}
 
 	    	return true;
 	    	 

@@ -8,12 +8,14 @@ import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronStatic;
 import net.lepidodendron.util.*;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
 import net.lepidodendron.world.biome.permian.BiomePermian;
 import net.lepidodendron.world.biome.silurian.BiomeSilurian;
 import net.lepidodendron.world.biome.triassic.BiomeTriassic;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -45,6 +47,7 @@ import net.minecraft.world.gen.feature.WorldGenReed;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -115,7 +118,7 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genCrinoidBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -129,7 +132,7 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 		if (matchBiome(biome, LepidodendronConfigPlants.genCrinoidOverrideBiomes))
 			biomeCriteria = true;
 
-		int multiplier = 1;
+		float multiplier = 1;
 
 		if (biome instanceof BiomeSilurian) {
 			BiomeSilurian biomeSilurian = (BiomeSilurian) biome;
@@ -174,6 +177,11 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 			else {
 				biomeCriteria = false;
 			}
+			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_conulariid")
+					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_conulariid_land")
+					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_algae")) {
+				biomeCriteria = false;
+			}
 		}
 		if (biome instanceof BiomeTriassic)
 		{
@@ -197,18 +205,22 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 
 		//int multiplier = 1;
 		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:silurian_sea_garden")) {
-			multiplier = 10;
+			multiplier = 0.75F;
 		}
 
-		for (int i = 0; i < (12 * multiplier); i++) {
+		for (int i = 0; i < (12F * multiplier); i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
 			int i11 = random.nextInt(128);
 			int l14 = chunkZ + random.nextInt(16) + 8;
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 6; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up();
 						if (((BlockCustom) block).isWaterBlock(world, blockpos1) && ((BlockCustom) block).isWaterBlock(world, blockpos1.up()) && ((BlockCustom) block).isWaterBlock(world, blockpos1.up(2))) {
 							BlockPos blockpos2 = blockpos1.down();
 							int j = crinoidHeight(world, blockpos1, random);
@@ -227,8 +239,8 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 
 	private static int crinoidHeight(World worldIn, BlockPos pos, Random random) {
 		if (worldIn.getBiome(pos).getRegistryName().toString().equalsIgnoreCase("lepidodendron:silurian_sea_garden")) {
-			if (random.nextInt(8) != 0) {
-				return BlockCrinoidEncrinus.BlockCustom.crinoidheight;
+			if (random.nextInt(4) != 0) {
+				return BlockCrinoidEncrinus.BlockCustom.crinoidheight - random.nextInt(2);
 			}
 		}
 		return 1 + random.nextInt(random.nextInt(random.nextInt(BlockCrinoidEncrinus.BlockCustom.crinoidheight) + 1) + 1);
@@ -375,6 +387,7 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.WOOD)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.CLAY)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.CORAL)
+				&& (world.getBlockState(pos.down()).getMaterial() != Material.SPONGE)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.IRON)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.GLASS)) {
 				blockface =  false;
@@ -431,14 +444,14 @@ public class BlockCrinoidEncrinus extends ElementsLepidodendronMod.ModElement {
 		}
 
 		public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	    
 	    @SideOnly(Side.CLIENT)

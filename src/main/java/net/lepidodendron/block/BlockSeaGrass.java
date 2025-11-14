@@ -9,6 +9,7 @@ import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.block.base.SeedSporeBlockBase;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
 import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
@@ -95,6 +96,10 @@ public class BlockSeaGrass extends ElementsLepidodendronMod.ModElement {
 	@Override
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
 
+		if (!Functions.shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimSeagrass)) {
+			return;
+		}
+
 		int weight = LepidodendronConfigPlants.weightSeagrass;
 		if (weight > 100) {weight = 100;}
 		if (weight < 0) {weight = 0;}
@@ -103,8 +108,8 @@ public class BlockSeaGrass extends ElementsLepidodendronMod.ModElement {
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
-		if (!matchBiome(biome, LepidodendronConfigPlants.genSeagrassBlacklistBiomes)) {
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
+		if (!Functions.matchBiome(biome, LepidodendronConfigPlants.genSeagrassBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH))
@@ -114,63 +119,20 @@ public class BlockSeaGrass extends ElementsLepidodendronMod.ModElement {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.VOID))
 				biomeCriteria = false;
 		}
-		if (matchBiome(biome, LepidodendronConfigPlants.genSeagrassOverrideBiomes))
+		if (Functions.matchBiome(biome, LepidodendronConfigPlants.genSeagrassOverrideBiomes))
 			biomeCriteria = true;
 
-		if (dimID == LepidodendronConfig.dimPrecambrian
-				|| dimID == LepidodendronConfig.dimCambrian
-				|| dimID == LepidodendronConfig.dimOrdovician
-				|| dimID == LepidodendronConfig.dimSilurian
-				|| dimID == LepidodendronConfig.dimDevonian
-				|| dimID == LepidodendronConfig.dimCarboniferous
-				|| dimID == LepidodendronConfig.dimPermian
-				|| dimID == LepidodendronConfig.dimTriassic
-				|| dimID == LepidodendronConfig.dimJurassic
-				|| dimID == LepidodendronConfig.dimCretaceousEarly
-		) {
-			biomeCriteria = false;
-		}
-
-		if (!biomeCriteria)
+		if (!biomeCriteria) {
 			return;
-
-		int multiplier = 1;
-		if (dimID == LepidodendronConfig.dimCretaceousLate
-		) {
-			multiplier = 32;
 		}
 
-		for (int i = 0; i < (int) 20 * multiplier; i++) {
+		for (int i = 0; i < (int) 20; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
-			int i11 = random.nextInt(128);
+			int i11 = random.nextInt(Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) * 2);
 			int l14 = chunkZ + random.nextInt(16) + 8;
+
 			(new AlgaeGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
-	}
-
-	public static boolean matchBiome(Biome biome, String[] biomesList) {
-
-		//String regName = biome.getRegistryName().toString();
-
-		String[] var2 = biomesList;
-		int var3 = biomesList.length;
-
-		for(int var4 = 0; var4 < var3; ++var4) {
-			String checkBiome = var2[var4];
-			if (!checkBiome.contains(":")) {
-				//System.err.println("modid test: " + biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":") - 1));
-				if (checkBiome.equalsIgnoreCase(
-						biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":"))
-				)) {
-					return true;
-				}
-			}
-			if (checkBiome.equalsIgnoreCase(biome.getRegistryName().toString())) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public static class BlockCustom extends SeedSporeBlockBase implements IShearable, IAdvancementGranter {
@@ -336,14 +298,14 @@ public class BlockSeaGrass extends ElementsLepidodendronMod.ModElement {
 		}
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	    @Override
 	    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
@@ -390,9 +352,9 @@ public class BlockSeaGrass extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Marine flowering plant");
-				tooltip.add("Periods: early Cretaceous - Paleogene  - Neogene - Pleistocene [- present]");
-				tooltip.add("Note: planted up to 10 blocks under water on sand. Spreads to adjacent blocks");
-				tooltip.add("Propagation: seeds");}
+				tooltip.add("Periods: Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+				tooltip.add("Note: Planted up to 10 blocks under water on sand. Spreads to adjacent blocks");
+				tooltip.add("Propagation: Seeds");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

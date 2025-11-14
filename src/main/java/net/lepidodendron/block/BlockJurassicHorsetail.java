@@ -98,7 +98,7 @@ public class BlockJurassicHorsetail extends ElementsLepidodendronMod.ModElement 
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genJurassicHorsetailBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -431,8 +431,8 @@ public class BlockJurassicHorsetail extends ElementsLepidodendronMod.ModElement 
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Horsetail shrub");
-	        	tooltip.add("Periods: Jurassic - early Cretaceous");
-	        	tooltip.add("Propagation: spores");}
+	        	tooltip.add("Periods: Jurassic - Early Cretaceous");
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

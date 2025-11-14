@@ -55,7 +55,7 @@ public class LepidodendronConfig {
     public static int dropSeeds = 50;
     public static int palaeopediaTruncation = 24;
     public static double genEdiacaran = 0.66D;
-    public static double junkFossil = 12.5;
+    public static double junkFossil = 20.0;
     public static double playerSleepPercent = 100.0;
     public static boolean playerSleep = true;
     public static boolean modFire = true;
@@ -70,9 +70,12 @@ public class LepidodendronConfig {
     public static boolean blockMobs = true;
     public static boolean blockMobsFAExceptions = true;
     public static boolean doMeteorites = true;
+    public static boolean doVolcanos = true;
     public static boolean doMeteoritesGriefing = true;
-    public static boolean doGuanoGriefing = true;
-    public static boolean doGuanoBats = true;
+    public static boolean doVolcanoGriefing = true;
+    public static int doVolcanoNether = 100;
+    public static double doGuanoGriefing = 1.00;
+    public static double doGuanoBats = 1.00;
     public static boolean fixApples = true;
     public static boolean doReSpawner = true;
     public static boolean doShoalingFlocking = true;
@@ -110,8 +113,8 @@ public class LepidodendronConfig {
     public static int dimCretaceousLate = -91;
 
     public static boolean doSpawnsPrehistoricFloraDefault = true;
-    public static boolean doSpawnsFossilsArcheology = false;
-    public static boolean doSpawnsReborn = false;
+//    public static boolean doSpawnsFossilsArcheology = false;
+//    public static boolean doSpawnsReborn = false;
     public static boolean globalHomePortals = false;
     public static boolean oneWayPortals = true;
     public static boolean oneWayPortalsNether = false;
@@ -209,6 +212,7 @@ public class LepidodendronConfig {
     public static int waterCacops = 10;
     public static int waterDasyceps = 10;
     public static int waterDvinosaurus = 3;
+    public static int waterTrypanognathus = 3;
     public static int waterMelosaurus = 4;
     public static int waterPantylus = 8;
     public static int waterUranocentrodon = 3;
@@ -503,19 +507,34 @@ public class LepidodendronConfig {
         doMeteorites = prop.getBoolean();
         propOrder.add(prop.getName());
 
+        prop = cfg.get("Global World-Gen", "doVolcanos", doVolcanos);
+        prop.setComment("Allow volcanos to erupt [default: true]");
+        doVolcanos = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = cfg.get("Global World-Gen", "doVolcanoGriefing", doVolcanoGriefing);
+        prop.setComment("Volcano fireballs set things on fire (note that this is also tied to the more general mobGriefing gamerule) [default: true]");
+        doVolcanoGriefing = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = cfg.get("Global World-Gen", "doVolcanoNether", doVolcanoNether);
+        prop.setComment("A value to control how many volcano fireballs can be produced in the Nether [default: 120]");
+        doVolcanoNether = prop.getInt();
+        propOrder.add(prop.getName());
+
         prop = cfg.get("Global World-Gen", "doMeteoritesGriefing", doMeteoritesGriefing);
         prop.setComment("Make meteorites cause craters and fire, and leave iron ore (note that meteorite griefing is also tied to the more general mobGriefing gamerule) [default: true]");
         doMeteoritesGriefing = prop.getBoolean();
         propOrder.add(prop.getName());
 
         prop = cfg.get("Global World-Gen", "doGuanoGriefing", doGuanoGriefing);
-        prop.setComment("Make some appropriate flying creatures drop guano ambiently, causing blocks of it to build up (note that guano is also tied to the more general mobGriefing gamerule) [default: true]");
-        doGuanoGriefing = prop.getBoolean();
+        prop.setComment("Frequency (0.00-1000.00) at which some appropriate flying creatures drop guano ambiently, causing blocks of it to build up (note that guano is also tied to the more general mobGriefing gamerule) [default: 1.00]");
+        doGuanoGriefing = prop.getDouble();
         propOrder.add(prop.getName());
 
         prop = cfg.get("Global World-Gen", "doGuanoBats", doGuanoBats);
-        prop.setComment("Make vanilla bats drop guano ambiently while roosting, causing blocks of it to build up (note that guano is also tied to the more general mobGriefing gamerule) [default: true]");
-        doGuanoBats = prop.getBoolean();
+        prop.setComment("Frequency (0.00-1000.00) at which vanilla bats drop guano ambiently while roosting, causing blocks of it to build up (note that guano is also tied to the more general mobGriefing gamerule) [default: 1.00]");
+        doGuanoBats = prop.getDouble();
         propOrder.add(prop.getName());
 
         prop = cfg.get("Global World-Gen", "doReSpawner", doReSpawner);
@@ -710,7 +729,7 @@ public class LepidodendronConfig {
         propOrder.add(prop.getName());
 
         prop = cfg.get("Global World-Gen", "junkFossil", junkFossil);
-        prop.setComment("Percentage chance that the acid bath returns a junk output instead of a fossil (0-100). [default: 12.5]");
+        prop.setComment("Percentage chance that the acid bath returns a junk output instead of a fossil (0-100). [default: 20]");
         junkFossil = prop.getDouble();
         propOrder.add(prop.getName());
 
@@ -839,14 +858,14 @@ public class LepidodendronConfig {
         prop.setComment("Set to false to disable the default mob-spawns from this mod. [default: true]");
         doSpawnsPrehistoricFloraDefault = prop.getBoolean();
         propOrder.add(prop.getName());
-        prop = cfg.get("Global Mobs", "doSpawnsFossilsArcheology", doSpawnsFossilsArcheology);
-        prop.setComment("Set to true add in appropriate mob-spawns from the mod Fossils and Archeology Revival [v.8.05]. [default: false]");
-        doSpawnsFossilsArcheology = prop.getBoolean();
-        propOrder.add(prop.getName());
-        prop = cfg.get("Global Mobs", "doSpawnsReborn", doSpawnsReborn);
-        prop.setComment("Set to true add in appropriate mob-spawns from the mod Jurassic World Reborn [v.1.1.1]. [default: false]");
-        doSpawnsReborn = prop.getBoolean();
-        propOrder.add(prop.getName());
+//        prop = cfg.get("Global Mobs", "doSpawnsFossilsArcheology", doSpawnsFossilsArcheology);
+//        prop.setComment("Set to true add in appropriate mob-spawns from the mod Fossils and Archeology Revival [v.8.05]. [default: false]");
+//        doSpawnsFossilsArcheology = prop.getBoolean();
+//        propOrder.add(prop.getName());
+//        prop = cfg.get("Global Mobs", "doSpawnsReborn", doSpawnsReborn);
+//        prop.setComment("Set to true add in appropriate mob-spawns from the mod Jurassic World Reborn [v.1.1.1]. [default: false]");
+//        doSpawnsReborn = prop.getBoolean();
+//        propOrder.add(prop.getName());
 
         prop = cfg.get("Rendering and Optimisation", "renderAnimations", renderAnimations);
         prop.setComment("Set to true to animate block-like mobs fully, or to false to render them as static blocks (useful for low performance graphics cards or for conflicts with Optifine). [default: true]");

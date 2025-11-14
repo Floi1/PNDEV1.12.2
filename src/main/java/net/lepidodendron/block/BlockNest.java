@@ -129,14 +129,21 @@ public class BlockNest extends ElementsLepidodendronMod.ModElement {
 
 		@Override
 		public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-			boolean isMound = false;
-			//if (worldIn instanceof World) {
-				isMound = (isMound( worldIn, pos));
-			//}
-			boolean isBird = (worldIn.getBlockState(pos.down()).getMaterial() == Material.LEAVES
-				|| worldIn.getBlockState(pos.down()).getMaterial() == Material.WOOD);
-
+			boolean	isMound = isMound(worldIn, pos);
+			boolean isBird = isBird(worldIn, pos);
 			return state.withProperty(MOUND, isMound).withProperty(BIRD, (isBird && !isMound));
+		}
+
+		public static boolean isBird(IBlockAccess world, BlockPos pos) {
+			return !(world.getBlockState(pos.down()).getMaterial() == Material.GROUND
+					|| world.getBlockState(pos.down()).getMaterial() == Material.CLAY
+					|| world.getBlockState(pos.down()).getMaterial() == Material.SAND
+					|| world.getBlockState(pos.down()).getMaterial() == Material.ROCK
+					|| world.getBlockState(pos.down()).getMaterial() == Material.CRAFTED_SNOW
+					|| world.getBlockState(pos.down()).getMaterial() == Material.ICE
+					|| world.getBlockState(pos.down()).getMaterial() == Material.PACKED_ICE
+					|| world.getBlockState(pos.down()).getMaterial() == Material.SNOW
+					|| world.getBlockState(pos.down()).getMaterial() == Material.GRASS);
 		}
 
 		public static boolean isMound(IBlockAccess world, BlockPos pos) {
@@ -173,6 +180,17 @@ public class BlockNest extends ElementsLepidodendronMod.ModElement {
 			//else if (!this.getActualState(state, worldIn, pos).getValue(BIRD)){
 			//	addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(0.05, 0, 0.05, 0.95, 0.2, 0.95));
 			//}
+		}
+
+		@Override
+		public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+			super.onEntityCollision(worldIn, pos, state, entityIn);
+			if (entityIn instanceof EntityPrehistoricFloraAgeableBase) {
+				EntityPrehistoricFloraAgeableBase base = (EntityPrehistoricFloraAgeableBase) entityIn;
+				if (!base.getLaying()) {
+					base.findNest(base, 6, false);
+				}
+			}
 		}
 
 		@Override
@@ -217,6 +235,9 @@ public class BlockNest extends ElementsLepidodendronMod.ModElement {
 		@Nullable
 		public static ItemStack getEggItemStack(@Nullable String stringEgg) {
 			stringEgg = stringEgg.replace(LepidodendronMod.MODID + ":prehistoric_flora_", "");
+			stringEgg = stringEgg.replace("@male", "");
+			stringEgg = stringEgg.replace("@female", "");
+			stringEgg = stringEgg.replace("@", "_");
 			String eggs = LepidodendronMod.MODID + ":eggs_" + stringEgg;
 			Item eggItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(eggs));
 			if (eggItem != null) {

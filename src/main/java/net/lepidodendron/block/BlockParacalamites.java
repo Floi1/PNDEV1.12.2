@@ -86,7 +86,7 @@ public class BlockParacalamites extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genParacalamitesBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -441,7 +441,7 @@ public class BlockParacalamites extends ElementsLepidodendronMod.ModElement {
 				tooltip.add("Type: Horsetail shrub");
 	        	tooltip.add("Periods: Permian");
 	        	tooltip.add("Note: Can be planted in water or on land");
-	        	tooltip.add("Propagation: spores");}
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

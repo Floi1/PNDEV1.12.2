@@ -116,7 +116,7 @@ public class ModelProtozygoptera extends ModelBasePalaeopedia {
     }
 
     public void renderStaticDisplayCase(float f) {
-        this.body.offsetZ = -0.080F;
+        this.body.offsetZ = 0.020F;
         this.setRotateAngle(hindwingR, 0.0F, (float)Math.toRadians(15), 0.0F);
         this.setRotateAngle(forewingR, 0.0F, 0.0F, 0.0F);
         this.setRotateAngle(forewingL, 0.0F, 0.0F, 0.0F);
@@ -127,6 +127,28 @@ public class ModelProtozygoptera extends ModelBasePalaeopedia {
 
     @Override
     public void renderStaticBook(float f) {
+        //Rotations, positions and sizing:
+        this.body.offsetY = -1.6F;
+        this.body.offsetX = -0.6F;
+        this.body.offsetZ = 2.0F;
+        this.body.rotateAngleY = (float)Math.toRadians(120);
+        this.body.rotateAngleX = (float)Math.toRadians(1);
+        this.body.rotateAngleZ = (float)Math.toRadians(0);
+        this.body.scaleChildren = true;
+        float scaler = 4.2F;
+        this.body.setScale(scaler, scaler, scaler);
+        //Start of pose:
+        this.setRotateAngle(body, 0.6F, 3.8F, -0.2F);
+        this.setRotateAngle(hindwingR, 0.0F, (float)Math.toRadians(15), 0.0F);
+        this.setRotateAngle(forewingR, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(forewingL, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(hindwingL, 0.0F, -(float)Math.toRadians(15), 0.0F);
+        //End of pose, now render the model:
+        this.body.render(f);
+        //Reset rotations, positions and sizing:
+        this.body.setScale(1.0F, 1.0F, 1.0F);
+        this.body.scaleChildren = false;
+        resetToDefaultPose();
 
     }
 
@@ -140,7 +162,7 @@ public class ModelProtozygoptera extends ModelBasePalaeopedia {
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity e) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, e);
         this.resetToDefaultPose();
-        this.body.offsetY = 1.1F;
+        this.body.offsetY = 0F;
 
         EntityPrehistoricFloraInsectFlyingBase ee = (EntityPrehistoricFloraInsectFlyingBase) e;
         if (ee.flyProgress != 0 && ee.getAttachmentPos() == null) { //flying pose

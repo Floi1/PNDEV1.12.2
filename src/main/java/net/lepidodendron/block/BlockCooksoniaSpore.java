@@ -258,6 +258,7 @@ public class BlockCooksoniaSpore extends ElementsLepidodendronMod.ModElement {
 			
 	    	if ((worldIn.getBlockState(pos.down()).getMaterial() != Material.GROUND) 
 	    		&& (worldIn.getBlockState(pos.down()).getMaterial() != Material.GRASS)
+				&& (worldIn.getBlockState(pos.down()).getMaterial() != Material.CLAY)
 	    		&& (worldIn.getBlockState(pos.down()).getBlock() != Blocks.GRAVEL.getDefaultState().getBlock()))
 	    	{
 	    		return false;
@@ -268,10 +269,10 @@ public class BlockCooksoniaSpore extends ElementsLepidodendronMod.ModElement {
 				return false;
 			}
 
-	    	if (!worldIn.canSeeSky(pos) && (worldIn.getBlockState(pos).getLightValue() < 7))
-	    	{
-	    		return false;
-	    	}
+//	    	if (!worldIn.canSeeSky(pos) && (worldIn.getBlockState(pos).getLightValue() < 7))
+//	    	{
+//	    		return false;
+//	    	}
 	    	
 			int distH = (int) LepidodendronConfigPlants.waterCooksoniaHorizontal;
 			if (distH < 1) distH = 1;

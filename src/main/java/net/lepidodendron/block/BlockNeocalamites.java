@@ -6,6 +6,7 @@ import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.item.ItemNeocalamitesItem;
 import net.lepidodendron.util.*;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.jurassic.BiomeJurassic;
 import net.lepidodendron.world.biome.permian.BiomePermian;
 import net.lepidodendron.world.biome.triassic.BiomeTriassic;
@@ -86,7 +87,7 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genNeocalamitesBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -116,17 +117,35 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_stony_plains")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_stony")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_desert_edge")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_wetlands_unwooded")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_wetlands_fern_copse")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_wetlands_fern_copse")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_wetlands_fern_copse_lakes")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain_brake")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_lowlands_floodplain_brake")
 			) {
 				biomeCriteria = true;
+			}
+			else {
+				biomeCriteria = false;
 			}
 		}
 
 		if (biome instanceof BiomeTriassic) {
 			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Cool
+			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.SouthAmericaAusAnt
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.CentralAfricaIndia
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.SouthAfricaMadagascar
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Europe
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Chinle
 				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.River
-				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Warm) {
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.USAGreenland
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.China
+				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Asia) {
 				biomeCriteria = true;
+			}
+			else {
+				biomeCriteria = false;
 			}
 		}
 
@@ -136,6 +155,9 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 					|| biomeJurassic.getBiomeType() == EnumBiomeTypeJurassic.River
 					|| biomeJurassic.getBiomeType() == EnumBiomeTypeJurassic.Desert) {
 				biomeCriteria = true;
+			}
+			else {
+				biomeCriteria = false;
 			}
 		}
 			
@@ -155,16 +177,24 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 		){
 			GenChance = 28;
 		}
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands")) {
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_wetlands_unwooded")) {
 			GenChance = 42;
 		}
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain")) {
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_wetlands_fern_copse")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_wetlands_fern_copse")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_wetlands_fern_copse_lakes")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_chinle_flats")) {
 			GenChance = 64;
 		}
 
 		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_lakes")
 			|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_lake_shore")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_desert_edge")) {
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_desert_edge")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain_brake")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_horsetails")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_horsetails")) {
 			GenChance = 256;
 		}
 
@@ -208,6 +238,12 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 				public boolean generate(World world, Random random, BlockPos pos) {
 					for (int i = 0; i < 10; ++i) {
 						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_delta_flats")
+								|| world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_delta_flats_mound")
+								|| world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_swamp_open")
+								|| world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_swamp_copse")) {
+							blockpos1 = new BlockPos(blockpos1.getX(),  Math.max(Functions.getAdjustedSeaLevel(world, blockpos1), ChunkGenSpawner.getTopSolidBlock(blockpos1, world).getY() + 1), blockpos1.getZ());
+						}
 						if (world.isAirBlock(blockpos1) && world.isAirBlock(blockpos1.up()) && world.isAirBlock(blockpos1.up(2)) && blockpos1.getY() >= minH && (blockpos1.getY() <= maxH || maxH == 0) ) {
 							
 							//Prepare a stem if this is in suitable water:
@@ -216,6 +252,10 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 					    		colWater = colWater + 1;
 					    	}
 					    	if ((colWater < 6) && (colWater > 1)) {
+								if (world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_china_lakes")) {
+									//Don't spawn water ones here:
+									continue;
+								}
 					    		//Build the stem:
 					    		int counter = 2;
 					    		while (counter <= colWater) {
@@ -491,9 +531,9 @@ public class BlockNeocalamites extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Horsetail shrub");
-	        	tooltip.add("Periods: [Carboniferous (?) -] Permian - Triassic - Jurassic");
+	        	tooltip.add("Periods: [Carboniferous (?) - ] Permian - Triassic - Jurassic");
 	        	tooltip.add("Note: Can be planted in water or on land");
-	        	tooltip.add("Propagation: spores");}
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 	}

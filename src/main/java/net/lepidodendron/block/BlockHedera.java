@@ -99,7 +99,7 @@ public class BlockHedera extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genHederaBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST))
 				biomeCriteria = true;
@@ -456,8 +456,8 @@ public class BlockHedera extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Flowering-plant vine");
-	        	tooltip.add("Periods: late Cretaceous - Paleogene  - Neogene - Pleistocene");
-	        	tooltip.add("Propagation: fruit");}
+	        	tooltip.add("Periods: Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+	        	tooltip.add("Propagation: Fruit");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

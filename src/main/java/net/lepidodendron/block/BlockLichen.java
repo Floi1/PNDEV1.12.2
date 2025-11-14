@@ -74,7 +74,7 @@ public class BlockLichen extends ElementsLepidodendronMod.ModElement {
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (biome instanceof BiomeCarboniferous) {
 			BiomeCarboniferous biomeCarboniferous = (BiomeCarboniferous) biome;
 			if (biomeCarboniferous.getBiomeType() == EnumBiomeTypeCarboniferous.Ice
@@ -1469,7 +1469,9 @@ public class BlockLichen extends ElementsLepidodendronMod.ModElement {
 		@Override
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
-	        tooltip.add("Note: spreads to surrounding block faces.");}
+			tooltip.add("Type: Symbiotic algae and fungi");
+			tooltip.add("Periods: [Devonian - ] Carboniferous - Permian [ - Triassic - Jurassic - ] Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");
+	        tooltip.add("Note: Spreads to surrounding block faces.");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

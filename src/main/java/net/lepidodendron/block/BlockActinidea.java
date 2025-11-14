@@ -99,7 +99,7 @@ public class BlockActinidea extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genActinideaBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE))
 				biomeCriteria = true;
@@ -457,8 +457,8 @@ public class BlockActinidea extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Flowering-plant vine");
-	        	tooltip.add("Periods: Paleogene (Eocene) - Neogene - Pleistocene");
-	        	tooltip.add("Propagation: fruit");}
+	        	tooltip.add("Periods: Paleogene (Eocene) - Neogene - Pleistocene [ - present]");
+	        	tooltip.add("Propagation: Fruit");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

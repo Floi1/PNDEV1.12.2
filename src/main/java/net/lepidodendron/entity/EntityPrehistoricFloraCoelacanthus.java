@@ -65,7 +65,7 @@ public class EntityPrehistoricFloraCoelacanthus extends EntityPrehistoricFloraAg
 
 	
 
-	public static String getPeriod() {return "[Devonian? - Carboniferous? -] Permian [- Triassic?]";}
+	public static String getPeriod() {return "[Devonian (?) - Carboniferous (?) - ] Permian [ - Triassic (?)]";}
 
 	//public static String getHabitat() {return "Aquatic Lobe-Finned Fish (Coelacanth)";}
 

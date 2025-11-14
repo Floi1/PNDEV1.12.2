@@ -313,6 +313,7 @@ public class BlockCooksonia extends ElementsLepidodendronMod.ModElement {
 
 	    	if ((worldIn.getBlockState(pos.down()).getMaterial() != Material.GROUND) 
 	    		&& (worldIn.getBlockState(pos.down()).getMaterial() != Material.GRASS)
+				&& (worldIn.getBlockState(pos.down()).getMaterial() != Material.CLAY)
 	    		&& (worldIn.getBlockState(pos.down()).getBlock() != Blocks.GRAVEL.getDefaultState().getBlock()))
 	    	{
 	    		return false;
@@ -323,11 +324,11 @@ public class BlockCooksonia extends ElementsLepidodendronMod.ModElement {
 				return false;
 			}
 
-	    	double getLight = worldIn.getLight(pos);
-	    	if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
-	    	{
-	    		return false;
-	    	}
+//	    	double getLight = worldIn.getLight(pos);
+//	    	if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
+//	    	{
+//	    		return false;
+//	    	}
 	    	
 			int distH = (int) LepidodendronConfigPlants.waterCooksoniaHorizontal;
 			if (distH < 1) distH = 1;
@@ -370,9 +371,9 @@ public class BlockCooksonia extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Proto-plant");
-				tooltip.add("Periods: Silurian - Devonian");
-				tooltip.add("Note: requires water proximity and spreads to surrounding gravel, grass and dirt");
-				tooltip.add("Propagation: spores");}
+				tooltip.add("Periods: Late Silurian - Early Devonian");
+				tooltip.add("Note: Requires water proximity and spreads to surrounding gravel, clay, grass and dirt");
+				tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

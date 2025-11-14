@@ -7,7 +7,9 @@ import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.item.ItemEquisetitesReedItem;
 import net.lepidodendron.util.CustomTrigger;
 import net.lepidodendron.util.EnumBiomeTypeJurassic;
+import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
 import net.lepidodendron.world.biome.jurassic.BiomeJurassic;
 import net.lepidodendron.world.biome.triassic.BiomeTriassic;
@@ -83,7 +85,7 @@ public class BlockEquisetitesReed extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genEquisetitesReedBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -102,9 +104,23 @@ public class BlockEquisetitesReed extends ElementsLepidodendronMod.ModElement {
 		if (biome instanceof BiomeTriassic) {
 			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_river")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_flooded_forest")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_flooded_forest_dense")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_flooded_forest")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_gondwanan_forest_clearing")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_gondwanan_forest_clearing_lake")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_gondwanan_plain_flat")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_horsetails")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_horsetails")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_gondwanan_plain")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_woodland")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_woodland_polje")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_woodland_polje_edge")) {
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_woodland_polje_edge")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_delta_flats")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_delta_flats_mound")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_chinle_flats")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_chinle_flats")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_swamp_open")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_swamp_copse")) {
 				biomeCriteria = true;
 			}
 			else {
@@ -201,7 +217,10 @@ public class BlockEquisetitesReed extends ElementsLepidodendronMod.ModElement {
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cretaceous_early_europe_field")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cretaceous_early_africa_swamp")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cretaceous_early_creek_africa_swamp_open")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cretaceous_early_creek_africa_swamp")) {
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:cretaceous_early_creek_africa_swamp")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_horsetails")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_creek_horsetails")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_chinle_flats")) {
 			GenChance = 64;
 		}
 
@@ -232,50 +251,59 @@ public class BlockEquisetitesReed extends ElementsLepidodendronMod.ModElement {
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 10; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up(random.nextInt(40));
 						if (world.isAirBlock(blockpos1) && world.isAirBlock(blockpos1.up()) && blockpos1.getY() >= minH && (blockpos1.getY() <= maxH || maxH == 0) ) {
-							
-							//Prepare a stem if this is in suitable water:
-							int colWater = 1;
-							while (colWater <= 6 && isWaterBlock(world, blockpos1.down(colWater))) {
-					    		colWater = colWater + 1;
-					    	}
-					    	if ((colWater < 6) && (colWater > 1)) {
-					    		//Build the stem:
-					    		int counter = 2;
-					    		while (counter <= colWater) {
-									if (world.getBlockState(blockpos1.down(counter)).getMaterial() == Material.WATER) {
-										world.setBlockState(blockpos1.down(counter), BlockEquisetitesReedStem.block.getDefaultState(), 2);
-									}
-					    			counter = counter + 1;
-					    		}
-					    	}
-							int j = 1 + random.nextInt(random.nextInt(7) + 2);
-							j = Math.max(3, j);
-							int heightCheck = 2;
-							boolean spaceCheck = true;
-							for (int k = 1; k <= j; ++k) {
-								if (((BlockCustomFlower) block).canBlockStay(world, blockpos1)
-									&& (world.isAirBlock(blockpos1.up(k))) && spaceCheck) {
-									heightCheck = k;
-								}
-								else {
-									spaceCheck = false;
-								}
+							if (world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_delta_flats")
+									|| world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_delta_flats_mound")
+									|| world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_swamp_open")
+									|| world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_swamp_copse")) {
+								blockpos1 = new BlockPos(blockpos1.getX(), Math.max(Functions.getAdjustedSeaLevel(world, blockpos1), ChunkGenSpawner.getTopSolidBlock(blockpos1, world).getY() + 1), blockpos1.getZ());
 							}
-							j = heightCheck;
-							for (int k = 0; k <= j; ++k) {
-								if (((BlockCustomFlower) block).canBlockStay(world, blockpos1)) {
-									if (k <= (j - 1)) {
-										world.setBlockState(blockpos1.up(k), block.getDefaultState(), 2); 
-									}
-									if (k == j) {
-										if (random.nextInt(3) == 0) {
-											world.setBlockState(blockpos1.up(k), BlockEquisetitesReedTopSpore.block.getDefaultState(), 2);
+							if (world.isAirBlock(blockpos1) && world.isAirBlock(blockpos1.up()) && world.isAirBlock(blockpos1.up(2)) && blockpos1.getY() >= minH && (blockpos1.getY() <= maxH || maxH == 0)) {
+								//Prepare a stem if this is in suitable water:
+								int colWater = 1;
+								while (colWater <= 6 && isWaterBlock(world, blockpos1.down(colWater))) {
+									colWater = colWater + 1;
+								}
+								if ((colWater < 6) && (colWater > 1)) {
+									//Build the stem:
+									int counter = 2;
+									while (counter <= colWater) {
+										if (world.getBlockState(blockpos1.down(counter)).getMaterial() == Material.WATER) {
+											world.setBlockState(blockpos1.down(counter), BlockEquisetitesReedStem.block.getDefaultState(), 2);
 										}
-										else {
-											world.setBlockState(blockpos1.up(k), BlockEquisetitesReedTop.block.getDefaultState(), 2);
+										counter = counter + 1;
+									}
+								}
+								int j = 1 + random.nextInt(random.nextInt(7) + 2);
+								j = Math.max(3, j);
+								int heightCheck = 2;
+								boolean spaceCheck = true;
+								for (int k = 1; k <= j; ++k) {
+									if (((BlockCustomFlower) block).canBlockStay(world, blockpos1)
+											&& (world.isAirBlock(blockpos1.up(k))) && spaceCheck) {
+										heightCheck = k;
+									} else {
+										spaceCheck = false;
+									}
+								}
+								j = heightCheck;
+								for (int k = 0; k <= j; ++k) {
+									if (((BlockCustomFlower) block).canBlockStay(world, blockpos1)) {
+										if (k <= (j - 1)) {
+											world.setBlockState(blockpos1.up(k), block.getDefaultState(), 2);
+										}
+										if (k == j) {
+											if (random.nextInt(3) == 0) {
+												world.setBlockState(blockpos1.up(k), BlockEquisetitesReedTopSpore.block.getDefaultState(), 2);
+											} else {
+												world.setBlockState(blockpos1.up(k), BlockEquisetitesReedTop.block.getDefaultState(), 2);
+											}
 										}
 									}
 								}

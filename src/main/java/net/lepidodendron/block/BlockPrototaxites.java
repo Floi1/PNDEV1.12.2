@@ -78,7 +78,7 @@ public class BlockPrototaxites extends ElementsLepidodendronMod.ModElement {
 
 		boolean biomeCriteria = false;
 		//Just an *additional* spawner for mushroom biomes:
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genPrototaxitesBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MUSHROOM))
 				biomeCriteria = true;
@@ -361,10 +361,10 @@ public class BlockPrototaxites extends ElementsLepidodendronMod.ModElement {
 		@Override
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
-				tooltip.add("Type: Proto-plant / fungus");
-	        	tooltip.add("Periods: Silurian - Devonian");
-	        	tooltip.add("Note: requires water proximity and spreads to surrounding mycelium, sand, rock and dirt, eventually putting up fruiting bodies.");
-	        	tooltip.add("Propagation: spores");}
+				tooltip.add("Type: Proto-plant / Fungus");
+	        	tooltip.add("Periods: Late Silurian - Devonian");
+	        	tooltip.add("Note: Requires water proximity and spreads to surrounding mycelium, sand, rock and dirt, eventually putting up fruiting bodies.");
+	        	tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

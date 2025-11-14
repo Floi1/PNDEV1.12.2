@@ -310,7 +310,7 @@ public class ModelEdentosuchus extends ModelBasePalaeopedia {
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
         this.main.offsetY = -2.0F;
-        this.main.offsetX = -0.1F;
+        this.main.offsetX = -0.0F;
         this.main.rotateAngleY = (float)Math.toRadians(222);
         this.main.rotateAngleX = (float)Math.toRadians(8);
         this.main.rotateAngleZ = (float)Math.toRadians(-8);
@@ -390,6 +390,7 @@ public class ModelEdentosuchus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.eye.setScale(1,1,1);
         EntityPrehistoricFloraEdentosuchus ee = (EntityPrehistoricFloraEdentosuchus) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {
@@ -2953,7 +2954,7 @@ public class ModelEdentosuchus extends ModelBasePalaeopedia {
             animator.startKeyframe(5);
             animator.rotate(this.body3, (float) Math.toRadians(8), (float) Math.toRadians(0), (float) Math.toRadians(0));
             animator.rotate(this.head, (float) Math.toRadians(-5), (float) Math.toRadians(0), (float) Math.toRadians(0));
-            animator.rotate(this.jaw, (float) -Math.toRadians(36), (float) Math.toRadians(0), (float) Math.toRadians(0));
+            animator.rotate(this.jaw, (float) Math.toRadians(36), (float) Math.toRadians(0), (float) Math.toRadians(0));
             animator.endKeyframe();
             animator.setStaticKeyframe(5);
             animator.startKeyframe(2);

@@ -6,7 +6,6 @@ import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronConfigPlants;
 import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
-import net.lepidodendron.util.*;
 import net.lepidodendron.world.biome.carboniferous.BiomeCarboniferous;
 import net.lepidodendron.world.biome.cretaceous.BiomeCretaceousEarly;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
@@ -16,6 +15,7 @@ import net.lepidodendron.world.biome.triassic.BiomeTriassic;
 import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -42,6 +42,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -84,7 +85,7 @@ public class BlockUnderwaterDebris extends ElementsLepidodendronMod.ModElement {
 		}
 		
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genUnderwaterDebrisBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER))
 				biomeCriteria = true;
@@ -109,78 +110,27 @@ public class BlockUnderwaterDebris extends ElementsLepidodendronMod.ModElement {
 		
 		if (biome instanceof BiomeDevonian)
 		{
-			BiomeDevonian biomeDevonian = (BiomeDevonian) biome;
-			if (biomeDevonian.getBiomeType() != EnumBiomeTypeDevonian.Hypersaline
-				&& biomeDevonian.getBiomeType() != EnumBiomeTypeDevonian.Brackish
-				&& biomeDevonian.getBiomeType() != EnumBiomeTypeDevonian.Ocean
-				&& biomeDevonian.getBiomeType() != EnumBiomeTypeDevonian.Springs) {
-				biomeCriteria = true;
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomeCarboniferous)
 		{
-			BiomeCarboniferous biomeCarboniferous = (BiomeCarboniferous) biome;
-			if (biomeCarboniferous.getBiomeType() != EnumBiomeTypeCarboniferous.Estuary
-					&& biomeCarboniferous.getBiomeType() != EnumBiomeTypeCarboniferous.Ocean
-					&& biomeCarboniferous.getBiomeType() != EnumBiomeTypeCarboniferous.Ice) {
-				biomeCriteria = true;
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomePermian)
 		{
-			BiomePermian biomePermian = (BiomePermian) biome;
-			if (biomePermian.getBiomeType() != EnumBiomeTypePermian.Arid
-					&& biomePermian.getBiomeType() != EnumBiomeTypePermian.Ocean
-					&& biomePermian.getBiomeType() != EnumBiomeTypePermian.Desert) {
-				biomeCriteria = true;
-				if (biomePermian.getBiomeType() == EnumBiomeTypePermian.River) {
-					multiplier = 5;
-				}
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomeTriassic)
 		{
-			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() != EnumBiomeTypeTriassic.Ocean
-					&& biomeTriassic.getBiomeType() != EnumBiomeTypeTriassic.Desert) {
-				biomeCriteria = true;
-				if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.River) {
-					multiplier = 5;
-				}
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomeJurassic)
 		{
-			BiomeJurassic biomeJurassic = (BiomeJurassic) biome;
-			if (biomeJurassic.getBiomeType() != EnumBiomeTypeJurassic.Ocean
-					&& biomeJurassic.getBiomeType() != EnumBiomeTypeJurassic.Garrigue) {
-				biomeCriteria = true;
-				if (biomeJurassic.getBiomeType() == EnumBiomeTypeJurassic.River) {
-					multiplier = 5;
-				}
-				if (biomeJurassic.getBiomeType() == EnumBiomeTypeJurassic.Lake) {
-					multiplier = 50;
-				}
-			}
-			else {
-				biomeCriteria = false;
-			}
+			biomeCriteria = false;
 		}
 
 		if (biome instanceof BiomeCretaceousEarly)
@@ -209,6 +159,33 @@ public class BlockUnderwaterDebris extends ElementsLepidodendronMod.ModElement {
 			}
 		}
 
+		if (dimID == LepidodendronConfig.dimPrecambrian){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimCambrian){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimOrdovician){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimSilurian) {
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimDevonian){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimCarboniferous){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimPermian){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimTriassic){
+			biomeCriteria = false;
+		}
+		if (dimID == LepidodendronConfig.dimJurassic){
+			biomeCriteria = false;
+		}
 		if (!biomeCriteria) {
 			return;
 		}
@@ -495,7 +472,8 @@ public class BlockUnderwaterDebris extends ElementsLepidodendronMod.ModElement {
 			//System.err.println("Can place");
 			
 			if ((isWaterBlock(worldIn, pos)) && (isWaterBlock(worldIn, pos.up()))) {
-				return super.canPlaceBlockAt(worldIn, pos); 
+				return super.canPlaceBlockAt(worldIn, pos)
+						&& worldIn.getBlockState(pos.down()).getBlockFaceShape(worldIn, pos.down(), EnumFacing.UP) == BlockFaceShape.SOLID;
 			}
 			//if (((world.getBlockState(pos.down()).getMaterial() != Material.SAND)
 			//	&& (world.getBlockState(pos.down()).getMaterial() != Material.ROCK)
@@ -547,14 +525,14 @@ public class BlockUnderwaterDebris extends ElementsLepidodendronMod.ModElement {
 	    }
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	}
 }

@@ -10,7 +10,7 @@ import net.lepidodendron.creativetab.TabLepidodendronStatic;
 import net.lepidodendron.util.CustomTrigger;
 import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
-import net.lepidodendron.world.gen.CharniaGenerator;
+import net.lepidodendron.world.gen.SeaPenGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
@@ -95,7 +95,7 @@ public class BlockSeaPenPink extends ElementsLepidodendronMod.ModElement {
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genAnemoneBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -109,11 +109,6 @@ public class BlockSeaPenPink extends ElementsLepidodendronMod.ModElement {
 		if (matchBiome(biome, LepidodendronConfigPlants.genAnemoneOverrideBiomes))
 			biomeCriteria = true;
 
-		if ((dimID == LepidodendronConfig.dimPrecambrian)
-		) {
-			biomeCriteria = false;
-		}
-
 		if (!biomeCriteria)
 			return;
 
@@ -121,7 +116,7 @@ public class BlockSeaPenPink extends ElementsLepidodendronMod.ModElement {
 			int l6 = chunkX + random.nextInt(16) + 8;
 			int i11 = random.nextInt(Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ))+1);
 			int l14 = chunkZ + random.nextInt(16) + 8;
-			(new CharniaGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
+			(new SeaPenGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
 	}
 
@@ -376,7 +371,7 @@ public class BlockSeaPenPink extends ElementsLepidodendronMod.ModElement {
 		public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 			if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Sessile organism");
-				tooltip.add("Periods: Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene - present");
+				tooltip.add("Periods: Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");
 			}
 			super.addInformation(stack, player, tooltip, advanced);
 		}

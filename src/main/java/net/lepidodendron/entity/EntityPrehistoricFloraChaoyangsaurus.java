@@ -4,6 +4,7 @@ package net.lepidodendron.entity;
 import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
 import net.ilexiconn.llibrary.server.animation.AnimationHandler;
 import net.lepidodendron.LepidodendronMod;
+import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.entity.ai.*;
 import net.lepidodendron.entity.base.EntityPrehistoricFloraAgeableBase;
 import net.lepidodendron.entity.base.EntityPrehistoricFloraLandBase;
@@ -11,6 +12,8 @@ import net.lepidodendron.entity.render.entity.RenderChaoyangsaurus;
 import net.lepidodendron.entity.render.tile.RenderDisplays;
 import net.lepidodendron.entity.util.IScreamer;
 import net.lepidodendron.entity.util.ITrappableLand;
+import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.ModTriggers;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -35,7 +38,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityPrehistoricFloraChaoyangsaurus extends EntityPrehistoricFloraLandBase implements IScreamer, ITrappableLand {
+public class EntityPrehistoricFloraChaoyangsaurus extends EntityPrehistoricFloraLandBase implements IAdvancementGranter, IScreamer, ITrappableLand {
 
 	public BlockPos currentTarget;
 	@SideOnly(Side.CLIENT)
@@ -176,13 +179,14 @@ public class EntityPrehistoricFloraChaoyangsaurus extends EntityPrehistoricFlora
 		tasks.addTask(2, new LandEntitySwimmingAI(this, 0.75, false));
 		tasks.addTask(3, new AttackAI(this, 1.0D, false, this.getAttackLength()));
 		tasks.addTask(4, new PanicScreamAI(this, 1.0));
-		tasks.addTask(5, new LandWanderNestAI(this));
-		tasks.addTask(6, new LandWanderFollowParent(this, 1.05D));
-		tasks.addTask(7, new LandWanderHerd(this, 1.00D, Math.max(1F, this.width) * this.getNavigator().getPathSearchRange() * 0.75F, 5));
-		tasks.addTask(8, new LandWanderAvoidWaterAI(this, 1.0D));
-		tasks.addTask(9, new EntityWatchClosestAI(this, EntityPlayer.class, 6.0F));
-		tasks.addTask(10, new EntityWatchClosestAI(this, EntityPrehistoricFloraAgeableBase.class, 8.0F));
-		tasks.addTask(11, new EntityLookIdleAI(this));
+        tasks.addTask(5, new AvoidEntityPN<>(this, EntityLivingBase.class, 6.0F, true));
+		tasks.addTask(6, new LandWanderNestAI(this));
+		tasks.addTask(7, new LandWanderFollowParent(this, 1.05D));
+		tasks.addTask(8, new LandWanderHerd(this, 1.00D, Math.max(1F, this.width) * this.getNavigator().getPathSearchRange() * 0.75F, 5));
+		tasks.addTask(9, new LandWanderAvoidWaterAI(this, 1.0D));
+		tasks.addTask(10, new EntityWatchClosestAI(this, EntityPlayer.class, 6.0F));
+		tasks.addTask(11, new EntityWatchClosestAI(this, EntityPrehistoricFloraAgeableBase.class, 8.0F));
+		tasks.addTask(12, new EntityLookIdleAI(this));
 		this.targetTasks.addTask(0, new EatItemsEntityPrehistoricFloraAgeableBaseAI(this, 1));
 		this.targetTasks.addTask(1, new EntityHurtByTargetSmallerThanMeAI(this, false));
 	}
@@ -459,4 +463,9 @@ public class EntityPrehistoricFloraChaoyangsaurus extends EntityPrehistoricFlora
 		return RenderChaoyangsaurus.getScaler();
 	}
 
+	@Nullable
+	@Override
+	public CustomTrigger getModTrigger() {
+		return ModTriggers.CLICK_CHAOYANGSAURUS;
+	}
 }

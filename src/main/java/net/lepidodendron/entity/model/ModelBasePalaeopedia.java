@@ -5,6 +5,5 @@ import net.lepidodendron.entity.model.llibraryextensions.AdvancedModelBaseExtend
 public abstract class ModelBasePalaeopedia extends AdvancedModelBaseExtended {
 
     public abstract void renderStaticBook(float f);
-    //To be completed on each instance/child
 
 }

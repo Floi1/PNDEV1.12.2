@@ -7,10 +7,10 @@ import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.item.ItemPhyllothecaItem;
 import net.lepidodendron.util.CustomTrigger;
 import net.lepidodendron.util.EnumBiomeTypePermian;
-import net.lepidodendron.util.EnumBiomeTypeTriassic;
+import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.permian.BiomePermian;
-import net.lepidodendron.world.biome.triassic.BiomeTriassic;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockReed;
 import net.minecraft.block.SoundType;
@@ -81,7 +81,7 @@ public class BlockPhyllotheca extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genPhyllothecaBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP))
 				biomeCriteria = true;
@@ -99,28 +99,20 @@ public class BlockPhyllotheca extends ElementsLepidodendronMod.ModElement {
 
 		if (biome instanceof BiomePermian) {
 			BiomePermian biomePermian = (BiomePermian) biome;
-			if (biomePermian.getBiomeType() == EnumBiomeTypePermian.Wetlands
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain")
+			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain_brake")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_lowlands_floodplain_brake")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_river")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_stony_plains")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_stony")
 				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_arid_lands_lush")
-					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_arid")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_arid_lands_lush")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_arid")
 				|| biomePermian.getBiomeType() == EnumBiomeTypePermian.Glossopteris) {
 				biomeCriteria = true;
 			}
-			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_cold_glossopteris_swamp")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_cold_glossopteris_forest")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_creek_cold_glossopteris_foggy")) {
+			else {
 				biomeCriteria = false;
-			}
-		}
-
-		if (biome instanceof BiomeTriassic) {
-			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.River
-				|| biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Swamp) {
-				biomeCriteria = true;
 			}
 		}
 			
@@ -179,6 +171,9 @@ public class BlockPhyllotheca extends ElementsLepidodendronMod.ModElement {
 				public boolean generate(World world, Random random, BlockPos pos) {
 					for (int i = 0; i < 10; ++i) {
 						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (world.getBiome(blockpos1).getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_lowlands_floodplain_brake")) {
+							blockpos1 = new BlockPos(blockpos1.getX(),  Math.max(Functions.getAdjustedSeaLevel(world, blockpos1), ChunkGenSpawner.getTopSolidBlock(blockpos1, world).getY() + 1), blockpos1.getZ());
+						}
 						if (world.isAirBlock(blockpos1) && world.isAirBlock(blockpos1.up()) && blockpos1.getY() >= minH && (blockpos1.getY() <= maxH || maxH == 0) ) {
 							
 							//Prepare a stem if this is in suitable water:
@@ -454,7 +449,7 @@ public class BlockPhyllotheca extends ElementsLepidodendronMod.ModElement {
 				tooltip.add("Type: Horsetail shrub");
 				tooltip.add("Periods: Permian");
 				tooltip.add("Note: Can be planted in water or on land");
-				tooltip.add("Propagation: spores");}
+				tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 	}

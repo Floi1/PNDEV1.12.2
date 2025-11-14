@@ -3,17 +3,14 @@ package net.lepidodendron.block;
 
 import net.lepidodendron.ElementsLepidodendronMod;
 import net.lepidodendron.LepidodendronConfig;
-import net.lepidodendron.LepidodendronConfigPlants;
 import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronStatic;
 import net.lepidodendron.util.CustomTrigger;
-import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
-import net.lepidodendron.world.biome.permian.BiomePermian;
-import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -35,12 +32,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -82,102 +76,6 @@ public class BlockGigantospongia extends ElementsLepidodendronMod.ModElement {
 		OreDictionary.registerOre("itemSponge", BlockGigantospongia.block);
 		OreDictionary.registerOre("pndietSponge", BlockGigantospongia.block);
 	}
-
-	@Override
-	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {		
-		
-		int weight = LepidodendronConfigPlants.weightGigantospongia;
-		if (weight > 100) {weight = 100;}
-		if (weight < 0) {weight = 0;}
-		if (Math.random() < ((double) (100 - (double) weight)/100)) {
-			return;
-		}
-
-		if (dimID == LepidodendronConfig.dimPrecambrian
-			|| dimID == LepidodendronConfig.dimCambrian
-			|| dimID == LepidodendronConfig.dimOrdovician || dimID == LepidodendronConfig.dimSilurian
-			|| dimID == LepidodendronConfig.dimDevonian
-			|| dimID == LepidodendronConfig.dimCarboniferous
-			|| dimID == LepidodendronConfig.dimTriassic
-			|| dimID == LepidodendronConfig.dimJurassic
-			|| dimID == LepidodendronConfig.dimCretaceousEarly
-			|| dimID == LepidodendronConfig.dimCretaceousLate
-			|| dimID == LepidodendronConfig.dimPaleogene
-			|| dimID == LepidodendronConfig.dimNeogene
-			|| dimID == LepidodendronConfig.dimPleistocene
-		) {
-			return;
-		}
-		
-		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
-		if (!matchBiome(biome, LepidodendronConfigPlants.genGigantospongiaBlacklistBiomes)) {
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
-				biomeCriteria = true;
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH))
-				biomeCriteria = true;
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.DEAD))
-				biomeCriteria = false;
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.VOID))
-				biomeCriteria = false;
-		}
-		if (dimID == 0) {
-			biomeCriteria = false;
-		}
-		if (matchBiome(biome, LepidodendronConfigPlants.genGigantospongiaOverrideBiomes))
-			biomeCriteria = true;
-		if (biome instanceof BiomePermian)
-		{
-			BiomePermian biomePermian = (BiomePermian) biome;
-			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_ocean_cliff")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:permian_ocean_sponge_reef")) {
-				biomeCriteria = true;
-			}
-			else {
-				biomeCriteria = false;
-			}
-		}
-		if (!biomeCriteria)
-			return;
-
-		int multiplier = 1;
-		if ((dimID == LepidodendronConfig.dimPermian)
-		) {
-			multiplier = 36;
-		}
-
-		for (int i = 0; i < (int) 10 * multiplier; i++) {
-			int l6 = chunkX + random.nextInt(16) + 8;
-			int i11 = random.nextInt(Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) + 1);
-			int l14 = chunkZ + random.nextInt(16) + 8;
-			(new AlgaeGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
-		}
-	}
-
-	public static boolean matchBiome(Biome biome, String[] biomesList) {
-    	
-    	//String regName = biome.getRegistryName().toString();
-    	
-        String[] var2 = biomesList;
-        int var3 = biomesList.length;
-
-        for(int var4 = 0; var4 < var3; ++var4) {
-            String checkBiome = var2[var4];
-            if (!checkBiome.contains(":")) {
-            	//System.err.println("modid test: " + biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":") - 1));
-	            if (checkBiome.equalsIgnoreCase(
-	            	biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":"))
-	            	)) {
-	                return true;
-	            }
-        	}
-        	if (checkBiome.equalsIgnoreCase(biome.getRegistryName().toString())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 	
 	public static class BlockCustom extends Block implements net.minecraftforge.common.IShearable, IAdvancementGranter {
 		
@@ -463,14 +361,14 @@ public class BlockGigantospongia extends ElementsLepidodendronMod.ModElement {
 	    }
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 		@SideOnly(Side.CLIENT)
 		@Override

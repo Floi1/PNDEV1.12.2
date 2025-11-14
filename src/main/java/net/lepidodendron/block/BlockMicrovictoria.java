@@ -289,14 +289,14 @@ public class BlockMicrovictoria extends ElementsLepidodendronMod.ModElement {
 	    }
 
 	    public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	    @Override
 	    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
@@ -408,9 +408,9 @@ public class BlockMicrovictoria extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Flowering water plant");
-	        tooltip.add("Periods: late Cretaceous");
-	        tooltip.add("Note: planted under water");
-	        tooltip.add("Propagation: flowers");}
+	        tooltip.add("Periods: Late Cretaceous");
+	        tooltip.add("Note: Planted under water");
+	        tooltip.add("Propagation: Flowers");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

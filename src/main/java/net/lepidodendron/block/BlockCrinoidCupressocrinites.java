@@ -8,10 +8,11 @@ import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronStatic;
 import net.lepidodendron.util.CustomTrigger;
-import net.lepidodendron.util.EnumBiomeTypeDevonian;
 import net.lepidodendron.util.ModTriggers;
+import net.lepidodendron.world.biome.ChunkGenSpawner;
 import net.lepidodendron.world.biome.devonian.BiomeDevonian;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -23,7 +24,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -44,6 +44,7 @@ import net.minecraft.world.gen.feature.WorldGenReed;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -110,7 +111,7 @@ public class BlockCrinoidCupressocrinites extends ElementsLepidodendronMod.ModEl
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genCrinoidBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
 				biomeCriteria = true;
@@ -127,18 +128,33 @@ public class BlockCrinoidCupressocrinites extends ElementsLepidodendronMod.ModEl
 		if (biome instanceof BiomeDevonian)
 		{
 			BiomeDevonian biomeDev = (BiomeDevonian) biome;
-			if (biomeDev.getBiomeType() == EnumBiomeTypeDevonian.Ocean) {
+			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean")
+					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_deep_rocky")
+					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_deep")
+					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_reef")
+					|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_reef_transition")) {
 				biomeCriteria = true;
 			}
 			else {
 				biomeCriteria = false;
 			}
+//			if (biomeDev.getBiomeType() == EnumBiomeTypeDevonian.Ocean) {
+//				biomeCriteria = true;
+//			}
+//			else {
+//				biomeCriteria = false;
+//			}
+//			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_algae")) {
+//				biomeCriteria = false;
+//			}
 		}
 		if (!biomeCriteria)
 			return;
 
 		int multiplier = 1;
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_dead_reef")) {
+		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_reef")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_reef_transition")
+				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_deep_rocky")) {
 			multiplier = 15;
 		}
 
@@ -149,8 +165,12 @@ public class BlockCrinoidCupressocrinites extends ElementsLepidodendronMod.ModEl
 			(new WorldGenReed() {
 				@Override
 				public boolean generate(World world, Random random, BlockPos pos) {
-					for (int i = 0; i < 6; ++i) {
-						BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+					for (int i = 0; i < 1; ++i) {
+						//BlockPos blockpos1 = pos.add(random.nextInt(4) - random.nextInt(4), 0, random.nextInt(4) - random.nextInt(4));
+						if (random.nextInt(8) != 0) {
+							continue;
+						}
+						BlockPos blockpos1 = ChunkGenSpawner.getTopSolidBlock(pos, world).up(random.nextInt(40));
 						if (((BlockCustom) block).isWaterBlock(world, blockpos1) && ((BlockCustom) block).isWaterBlock(world, blockpos1.up()) && ((BlockCustom) block).isWaterBlock(world, blockpos1.up(2))) {
 							BlockPos blockpos2 = blockpos1.down();
 							int j = crinoidHeight(world, blockpos1, random);
@@ -317,6 +337,7 @@ public class BlockCrinoidCupressocrinites extends ElementsLepidodendronMod.ModEl
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.WOOD)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.CLAY)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.CORAL)
+				&& (world.getBlockState(pos.down()).getMaterial() != Material.SPONGE)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.IRON)
 				&& (world.getBlockState(pos.down()).getMaterial() != Material.GLASS)) {
 				blockface =  false;
@@ -373,14 +394,14 @@ public class BlockCrinoidCupressocrinites extends ElementsLepidodendronMod.ModEl
 		}
 
 		public boolean isWaterBlock(World world, BlockPos pos) {
-			if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-				//IBlockState iblockstate = world.getBlockState(pos);
-				//if (((Integer)iblockstate.getValue(BlockLiquid.LEVEL)).intValue() == 0) {
-					return true;
-				//}
+			IBlockState state  = world.getBlockState(pos);
+			if (state.getMaterial() == Material.WATER
+					&& (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase
+					|| state.getBlock() == this)) {
+				return true;
 			}
-	    	return false;
-	    }
+			return false;
+		}
 
 	    
 	    @SideOnly(Side.CLIENT)
@@ -388,7 +409,7 @@ public class BlockCrinoidCupressocrinites extends ElementsLepidodendronMod.ModEl
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Crinoid");
-				tooltip.add("Periods: Devonian");
+				tooltip.add("Periods: Middle Devonian - Late Devonian");
 			}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }

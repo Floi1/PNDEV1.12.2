@@ -401,11 +401,41 @@ public class ModelLeedsichthys extends ModelBasePalaeopedia {
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         animate((IAnimatedEntity) entity, f, f1, f2, f3, f4, f5);
+        if (entity.isInWater()) {
+            this.root.offsetY = this.root.offsetY + 0.7F;
+        }
         this.root.render(f5);
     }
 
     @Override
     public void renderStaticBook(float f) {
+        //Rotations, positions and sizing:
+        this.root.offsetY = -0.8F;
+        this.root.offsetX = 0.0F;
+        this.root.offsetZ = 2.0F;
+        this.root.rotateAngleY = (float)Math.toRadians(120);
+        this.root.rotateAngleX = (float)Math.toRadians(1);
+        this.root.rotateAngleZ = (float)Math.toRadians(0);
+        this.root.scaleChildren = true;
+        float scaler = 0.4F;
+        this.root.setScale(scaler, scaler, scaler);
+        //Start of pose:
+        this.setRotateAngle(root, 0.6F, 3.8F, -0.2F);
+        this.setRotateAngle(head, 0.0F, -0.05F, 0.0F);
+        this.setRotateAngle(jaw, 0.6F, 0.0F, 0.0F);
+        this.setRotateAngle(maxilla, -0.4F, 0.0F, 0.0F);
+        this.setRotateAngle(tail, 0.0F, 0.2F, 0.0F);
+        this.setRotateAngle(tail2, 0.0F, 0.2F, 0.0F);
+        this.setRotateAngle(tail3, 0.0F, 0.2F, 0.0F);
+        this.setRotateAngle(tail4, 0.0F, -0.2F, 0.0F);
+        this.setRotateAngle(tail5, 0.0F, -0.5F, 0.0F);
+        this.setRotateAngle(tail6, 0.0F, -0.5F, 0.0F);
+        //End of pose, now render the model:
+        this.root.render(f);
+        //Reset rotations, positions and sizing:
+        this.root.setScale(1.0F, 1.0F, 1.0F);
+        this.root.scaleChildren = false;
+        resetToDefaultPose();
 
     }
 

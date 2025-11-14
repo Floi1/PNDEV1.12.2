@@ -8,9 +8,8 @@ import net.lepidodendron.LepidodendronSorter;
 import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.creativetab.TabLepidodendronPlants;
 import net.lepidodendron.util.CustomTrigger;
-import net.lepidodendron.util.EnumBiomeTypePrecambrian;
+import net.lepidodendron.util.Functions;
 import net.lepidodendron.util.ModTriggers;
-import net.lepidodendron.world.biome.precambrian.BiomePrecambrian;
 import net.lepidodendron.world.gen.AlgaeGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
@@ -84,8 +83,12 @@ public class BlockGreenAlgaeMat extends ElementsLepidodendronMod.ModElement {
 	}
 
 	@Override
-	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {		
-			
+	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
+
+		if (!Functions.shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimModernSeaBlockLife)) {
+			return;
+		}
+
 		int weight = LepidodendronConfigPlants.weightGreenAlgaeMat;
 		if (weight > 100) {weight = 100;}
 		if (weight < 0) {weight = 0;}
@@ -94,141 +97,29 @@ public class BlockGreenAlgaeMat extends ElementsLepidodendronMod.ModElement {
 		}
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
-		if (!matchBiome(biome, LepidodendronConfigPlants.genGreenAlgaeMatBlacklistBiomes)) {
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
+		if (!Functions.matchBiome(biome, LepidodendronConfigPlants.genGreenAlgaeMatBlacklistBiomes)) {
 			biomeCriteria = true;
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.DEAD))
 				biomeCriteria = false;
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.VOID))
 				biomeCriteria = false;
 		}
-		if (matchBiome(biome, LepidodendronConfigPlants.genGreenAlgaeMatOverrideBiomes))
+		if (Functions.matchBiome(biome, LepidodendronConfigPlants.genGreenAlgaeMatOverrideBiomes))
 			biomeCriteria = true;
-		if ((dimID == LepidodendronConfig.dimCambrian)
-			|| (dimID == LepidodendronConfig.dimPrecambrian)
-			|| (dimID == LepidodendronConfig.dimOrdovician || dimID == LepidodendronConfig.dimSilurian)
-			|| (dimID == LepidodendronConfig.dimDevonian)
-			|| (dimID == LepidodendronConfig.dimCarboniferous)
-			|| (dimID == LepidodendronConfig.dimPermian)
-			|| (dimID == LepidodendronConfig.dimTriassic)
-			|| (dimID == LepidodendronConfig.dimJurassic)
-			|| (dimID == LepidodendronConfig.dimCretaceousEarly)
-		) {
-			biomeCriteria = true;
-		}
 
-		if (biome instanceof BiomePrecambrian) {
-			BiomePrecambrian biomePrecambrian = (BiomePrecambrian) biome;
-			if (biomePrecambrian.getBiomeType() == EnumBiomeTypePrecambrian.Hadean
-				|| biomePrecambrian.getBiomeType() == EnumBiomeTypePrecambrian.Paleoproterozoic
-				|| biomePrecambrian.getBiomeType() == EnumBiomeTypePrecambrian.Archean
-				|| biomePrecambrian.getBiomeType() == EnumBiomeTypePrecambrian.Proterozoic_Land
-				|| biomePrecambrian.getBiomeType() == EnumBiomeTypePrecambrian.Mesoproterozoic
-			) {
-				biomeCriteria = false;
-			}
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_dead_reef")) {
-			biomeCriteria = false;
-		}
-
-		if (!biomeCriteria)
+		if (!biomeCriteria) {
 			return;
-
-		int multiplier = 1;
-		if ((dimID == LepidodendronConfig.dimDevonian)
-				|| (dimID == LepidodendronConfig.dimSilurian)
-				|| (dimID == LepidodendronConfig.dimPermian)
-				|| (dimID == LepidodendronConfig.dimJurassic)
-				|| (dimID == LepidodendronConfig.dimCretaceousEarly)
-		) {
-			multiplier = 2;
-		}
-		if ((dimID == LepidodendronConfig.dimCambrian)
-			|| (dimID == LepidodendronConfig.dimPrecambrian)
-			|| (dimID == LepidodendronConfig.dimTriassic))
-		{
-			multiplier = 3;
 		}
 
-		if (dimID == LepidodendronConfig.dimOrdovician)
-		{
-			multiplier = 4;
-		}
-		if (dimID == LepidodendronConfig.dimCarboniferous)
-		{
-			multiplier = 5;
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_sea_ice")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_sea_icebergs")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_sea_shore_frozen")
-				|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_beach_frozen")
-		)
-			multiplier = 24;
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_algal_reef")
-		)
-			multiplier = 48;
-
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:ordovician_sponge_forest")
-		)
-			multiplier = 12;
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_ocean_clam_beds")
-		)
-			multiplier = 24;
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_flooded_forest"))
-		{
-			multiplier = 5;
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_lakes")
-			|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:jurassic_lake_shore"))
-		{
-			multiplier = 8;
-		}
-
-		if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_brackish")
-			|| biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:devonian_ocean_deep_rocky")
-		)
-			multiplier = 36;
-
-		for (int i = 0; i < (int) 10 * multiplier; i++) {
+		for (int i = 0; i < (int) 10; i++) {
 			int l6 = chunkX + random.nextInt(16) + 8;
-			int i11 = random.nextInt(128);
+			int i11 = random.nextInt(Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ)) * 2);
 			int l14 = chunkZ + random.nextInt(16) + 8;
+
 			(new AlgaeGenerator((Block) block)).generate(world, random, new BlockPos(l6, i11, l14));
 		}
 	}
-
-	public static boolean matchBiome(Biome biome, String[] biomesList) {
-    	
-    	//String regName = biome.getRegistryName().toString();
-    	
-        String[] var2 = biomesList;
-        int var3 = biomesList.length;
-
-        for(int var4 = 0; var4 < var3; ++var4) {
-            String checkBiome = var2[var4];
-            if (!checkBiome.contains(":")) {
-            	//System.err.println("modid test: " + biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":") - 1));
-	            if (checkBiome.equalsIgnoreCase(
-	            	biome.getRegistryName().toString().substring(0, biome.getRegistryName().toString().indexOf(":"))
-	            	)) {
-	                return true;
-	            }
-        	}
-        	if (checkBiome.equalsIgnoreCase(biome.getRegistryName().toString())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
 	public static class BlockCustom extends Block implements net.minecraftforge.common.IShearable, IAdvancementGranter {
 		
@@ -781,18 +672,9 @@ public class BlockGreenAlgaeMat extends ElementsLepidodendronMod.ModElement {
 	    //@Override
 		public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
 		{
-
-			//System.err.println("Can place");
-
 			if ((isWaterBlock(worldIn, pos)) && (isWaterBlock(worldIn, pos.up()))) {
 				return super.canPlaceBlockAt(worldIn, pos);
 			}
-			//if (((world.getBlockState(pos.down()).getMaterial() != Material.SAND)
-			//	&& (world.getBlockState(pos.down()).getMaterial() != Material.ROCK)
-			//	&& (world.getBlockState(pos.down()).getMaterial() != Material.GROUND)
-			//	&& (world.getBlockState(pos.down()).getMaterial() != Material.CLAY))) {
-			//	return false;
-			//}
 			return false; 
 		}
 
@@ -853,8 +735,8 @@ public class BlockGreenAlgaeMat extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Freshwater or Marine Algae");
-	        	tooltip.add("Periods: [Paleoproterozoic (Mesoproterozoic (Calymmian (?) - Ectasian (?) - Stenian (?)) - ] Neoproterozoic (Tonian - Cryogenian - Ediacaran) - Cambrian - Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene  - Neogene - Pleistocene - present");
-	        	tooltip.add("Propagation: water");}
+	        	tooltip.add("Periods: [Mesoproterozoic (Calymmian (?) - Ectasian (?) - Stenian (?)) - ] Neoproterozoic (Tonian - Cryogenian - Ediacaran) - Cambrian - Ordovician - Silurian - Devonian - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene - present");
+	        	tooltip.add("Propagation: Water");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

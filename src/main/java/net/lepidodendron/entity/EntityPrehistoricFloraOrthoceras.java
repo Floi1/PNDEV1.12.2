@@ -4,6 +4,7 @@ package net.lepidodendron.entity;
 import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
 import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.LepidodendronMod;
+import net.lepidodendron.block.base.IAdvancementGranter;
 import net.lepidodendron.entity.ai.DietString;
 import net.lepidodendron.entity.ai.EatItemsEntityPrehistoricFloraAgeableBaseAI;
 import net.lepidodendron.entity.ai.EntityMateAIAgeableBase;
@@ -12,26 +13,28 @@ import net.lepidodendron.entity.base.EntityPrehistoricFloraNautiloidBase;
 import net.lepidodendron.entity.util.EnumCreatureAttributePN;
 import net.lepidodendron.entity.util.ITrappableWater;
 import net.lepidodendron.item.entities.ItemNautiloidEggsOrthoceras;
+import net.lepidodendron.util.CustomTrigger;
+import net.lepidodendron.util.ModTriggers;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNautiloidBase implements ITrappableWater {
+public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNautiloidBase implements ITrappableWater, IAdvancementGranter {
 
 	public BlockPos currentTarget;
 	@SideOnly(Side.CLIENT)
 	public ChainBuffer chainBuffer;
+	@SideOnly(Side.CLIENT)
+	public float bodyAngle;
 
 	public EntityPrehistoricFloraOrthoceras(World world) {
 		super(world);
@@ -39,7 +42,7 @@ public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNaut
 		minWidth = 0.1F;
 		maxWidth = 0.6F;
 		maxHeight = 0.59F;
-		maxHealthAgeable = 16.0D;
+		maxHealthAgeable = 12.0D;
 	}
 
 	@Override
@@ -61,9 +64,17 @@ public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNaut
 		return this.getAgeScale() < 0.2;
 	}
 
-	public static String getPeriod() {return "Ordovician - [Silurian]";}
+	public static String getPeriod() {return "Ordovician [ - Silurian]";}
 
-	//public static String getHabitat() {return "Aquatic";}
+	public boolean canBeVertical() {
+		//isReally in Water
+		boolean check1 = this.isReallyInWater();
+		int waterTest = Math.round(1 * this.getAgeScale());
+		boolean check2 = this.world.getBlockState(this.getPosition().up(waterTest)).getMaterial() != Material.WATER;
+
+
+		return check1 && !check2;
+	}
 
 	@Override
 	public boolean isAtBottom() {
@@ -99,7 +110,7 @@ public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNaut
 
 	@Override
 	protected float getAISpeedNautiloid() {
-		return 0.1f;
+		return 0.05f;
 	}
 
 	protected void initEntityAI() {
@@ -153,26 +164,40 @@ public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNaut
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		//this.renderYawOffset = this.rotationYaw;
-		if (this.isEntityAlive() && isInWater()) {
-			if (this.isAtBottom()) {
-				//Feeding from bottom pose:
-				BlockPos posIn = this.getPosition();
-				World worldIn = this.world;
-				//worldIn.playSound(player, posIn, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F);
-				if (worldIn instanceof WorldServer) {
-					if (Math.random() > 0.3) {
-						for (int k = 0; k < 8; ++k) {
-							((WorldServer) worldIn).spawnParticle(EnumParticleTypes.WATER_BUBBLE, posIn.getX(), posIn.getY(), posIn.getZ(), (int) 1, 1, 1, 1, 0.2, new int[0]);
-						}
-					}
-					if (Math.random() > 0.4) {
-						for (int k = 0; k < 4; ++k) {
-							((WorldServer) worldIn).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posIn.getX(), posIn.getY(), posIn.getZ(), (int) 1, 1, 1, 1, 0.1, new int[0]);
-						}
-					}
-				}
+		if (this.world.isRemote) {
+			if (this.canBeVertical()) {
+				this.bodyAngle ++;
+			}
+			else {
+				this.bodyAngle --;
+			}
+			if (this.bodyAngle > 90) {
+				this.bodyAngle = 90;
+			}
+			if (this.bodyAngle < 0) {
+				this.bodyAngle = 0;
 			}
 		}
+//		if (this.isEntityAlive() && isInWater()) {
+//			if (this.isAtBottom()) {
+//				//Feeding from bottom pose:
+//				BlockPos posIn = this.getPosition();
+//				World worldIn = this.world;
+//				//worldIn.playSound(player, posIn, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.8F);
+//				if (worldIn instanceof WorldServer) {
+//					if (Math.random() > 0.3) {
+//						for (int k = 0; k < 8; ++k) {
+//							((WorldServer) worldIn).spawnParticle(EnumParticleTypes.WATER_BUBBLE, posIn.getX(), posIn.getY(), posIn.getZ(), (int) 1, 1, 1, 1, 0.2, new int[0]);
+//						}
+//					}
+//					if (Math.random() > 0.4) {
+//						for (int k = 0; k < 4; ++k) {
+//							((WorldServer) worldIn).spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posIn.getX(), posIn.getY(), posIn.getZ(), (int) 1, 1, 1, 1, 0.1, new int[0]);
+//						}
+//					}
+//				}
+//			}
+//		}
 	}
 
 	@Nullable
@@ -181,5 +206,11 @@ public class EntityPrehistoricFloraOrthoceras extends EntityPrehistoricFloraNaut
 			return LepidodendronMod.ORTHOCERAS_LOOT_YOUNG;
 		}
 		return LepidodendronMod.ORTHOCERAS_LOOT;
+	}
+
+	@Nullable
+	@Override
+	public CustomTrigger getModTrigger() {
+		return ModTriggers.CLICK_ORTHOCERAS;
 	}
 }

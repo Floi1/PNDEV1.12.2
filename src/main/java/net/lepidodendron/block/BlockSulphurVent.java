@@ -70,7 +70,7 @@ public class BlockSulphurVent extends ElementsLepidodendronMod.ModElement {
 			return;
 		}
 
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (biome instanceof BiomePrecambrian) {
 			if (((BiomePrecambrian)biome).getBiomeType() != EnumBiomeTypePrecambrian.Ediacaran) {
 				return;
@@ -92,27 +92,17 @@ public class BlockSulphurVent extends ElementsLepidodendronMod.ModElement {
 							if (blockpos1.getY() > 35 + random.nextInt(3)) {
 								continue;
 							}
+							if (
+								((world.getBlockState(blockpos1.down()).getMaterial() == Material.SAND)
+									|| (world.getBlockState(blockpos1.down()).getMaterial() == Material.ROCK)
+									|| (world.getBlockState(blockpos1.down()).getMaterial() == Material.GROUND))
+									&& (world.getBlockState(blockpos1).getMaterial() == Material.WATER)
+									&& (world.getBlockState(blockpos1.up()).getMaterial() == Material.WATER)
+							)
 
-							//BlockPos blockpos2 = blockpos1.down();
-							//int j = random.nextInt(3) + 1;
-							//j = Math.min(3, j);
-							//for (int k = 0; k < j; ++k) {
-								//System.err.println("SeaLavel: " + (Functions.getAdjustedSeaLevel(world, new BlockPos(chunkX, 0, chunkZ))));
-								//System.err.println("Try to spawn at: "  + blockpos1.up(k).getY());
-								if (
-									//((world.isAirBlock(blockpos1.down()) || ((BlockFalling) block).canFallThrough(world.getBlockState(blockpos1.down()))) && blockpos1.getY() >= 0)
-									//&& ((world.isAirBlock(blockpos1.up(k).down()) || ((BlockFalling) block).canFallThrough(world.getBlockState(blockpos1.up(k).down()))) && blockpos1.up(k).getY() >= 0)
-									((world.getBlockState(blockpos1.down()).getMaterial() == Material.SAND)
-										|| (world.getBlockState(blockpos1.down()).getMaterial() == Material.ROCK)
-										|| (world.getBlockState(blockpos1.down()).getMaterial() == Material.GROUND))
-										&& (world.getBlockState(blockpos1).getMaterial() == Material.WATER)
-										&& (world.getBlockState(blockpos1.up()).getMaterial() == Material.WATER)
-								)
-
-								{
-									world.setBlockState(blockpos1, block.getDefaultState(), 2);
-								}
-							//}
+							{
+								world.setBlockState(blockpos1, block.getDefaultState(), 2);
+							}
 						}
 						return true;
 					}
@@ -234,14 +224,13 @@ public class BlockSulphurVent extends ElementsLepidodendronMod.ModElement {
 			int y = pos.getY();
 			int z = pos.getZ();
 			int i = x;
-			int j = y;
+			int j = y + 1;
 			int k = z;
-			if (true)
+			if (random.nextInt(15) == 0)
 				for (int l = 0; l < 5; ++l) {
 					double d0 = (i + random.nextFloat());
 					double d1 = (j + random.nextFloat());
 					double d2 = (k + random.nextFloat());
-					int i1 = random.nextInt(2) * 2 - 1;
 					double d3 = (random.nextFloat() - 0.5D) * 0.1999999985098839D;
 					double d4 = (random.nextFloat() - 0.5D) * 0.1999999985098839D;
 					double d5 = (random.nextFloat() - 0.5D) * 0.1999999985098839D;
@@ -251,7 +240,6 @@ public class BlockSulphurVent extends ElementsLepidodendronMod.ModElement {
 					double d0 = (i + random.nextFloat());
 					double d1 = (j + random.nextFloat());
 					double d2 = (k + random.nextFloat());
-					int i1 = random.nextInt(2) * 2 - 1;
 					double d3 = (random.nextFloat() - 0.5D) * 0.1999999985098839D;
 					double d4 = (random.nextFloat() - 0.5D) * 0.1999999985098839D;
 					double d5 = (random.nextFloat() - 0.5D) * 0.1999999985098839D;

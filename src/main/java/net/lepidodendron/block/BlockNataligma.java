@@ -94,7 +94,7 @@ public class BlockNataligma extends ElementsLepidodendronMod.ModElement {
 			return;
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 128, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if ((!matchBiome(biome, LepidodendronConfig.genGlobalBlacklist)) && (!matchBiome(biome, LepidodendronConfigPlants.genNataligmaBlacklistBiomes))) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SAVANNA))
 				biomeCriteria = true;
@@ -116,7 +116,7 @@ public class BlockNataligma extends ElementsLepidodendronMod.ModElement {
 
 		if (biome instanceof BiomeTriassic)
 		{
-			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_woodland_field")) {
+			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_plains")) {
 				biomeCriteria = true;
 			}
 			else {
@@ -139,7 +139,7 @@ public class BlockNataligma extends ElementsLepidodendronMod.ModElement {
 
 		if (LepidodendronConfig.dimTriassic == dimID) {
 			GenChance = 25;
-			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_woodland_field")) {
+			if (biome.getRegistryName().toString().equalsIgnoreCase("lepidodendron:triassic_karoo_plains")) {
 				GenChance = 92;
 			}
 		}
@@ -351,7 +351,7 @@ public class BlockNataligma extends ElementsLepidodendronMod.ModElement {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Gnetophyte plant");
 				tooltip.add("Periods: Triassic");
-				tooltip.add("Propagation: fruit/cone");}
+				tooltip.add("Propagation: Fruit/Cone");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

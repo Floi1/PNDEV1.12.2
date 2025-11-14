@@ -32,7 +32,7 @@ public class FilamentousAlgaeGenerator extends WorldGenerator
     {
 		int dimID = worldIn.provider.getDimension();
     	boolean dimensionCriteria = false;
-		if (shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimAlgae))
+		if (shouldGenerateInDimension(dimID, LepidodendronConfigPlants.dimModernSeaBlockLife))
 			dimensionCriteria = true;
 		if ((dimID == LepidodendronConfig.dimCarboniferous)
 			|| (dimID == LepidodendronConfig.dimDevonian)
@@ -87,12 +87,6 @@ public class FilamentousAlgaeGenerator extends WorldGenerator
 
 	public boolean canSurviveAt(World worldIn, BlockPos pos) {
 		if (worldIn.getBlockState(pos.down()).getMaterial() != Material.WATER && worldIn.getBlockState(pos.down()).getMaterial() != Material.ICE)
-		{
-			return false;
-		}
-
-		double getLight = worldIn.getLight(pos);
-		if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
 		{
 			return false;
 		}

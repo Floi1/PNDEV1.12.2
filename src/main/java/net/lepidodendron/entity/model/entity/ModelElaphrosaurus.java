@@ -383,8 +383,9 @@ public class ModelElaphrosaurus extends ModelBasePalaeopedia {
     @Override
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
-        this.root.offsetY = 0.4F;
+        this.root.offsetY = 0.5F;
         this.root.offsetX = 0.0F;
+        this.root.offsetZ = 2.0F;
         this.root.rotateAngleY = (float)Math.toRadians(150);
         this.root.rotateAngleX = (float)Math.toRadians(5);
         this.root.rotateAngleZ = (float)Math.toRadians(0);
@@ -498,6 +499,8 @@ public class ModelElaphrosaurus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.Lefteye.setScale(1,1,1);
+        this.Righteye.setScale(1,1,1);
         EntityPrehistoricFloraElaphrosaurus ee = (EntityPrehistoricFloraElaphrosaurus) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {

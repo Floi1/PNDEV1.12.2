@@ -90,7 +90,7 @@ public class BlockAncientMoss extends ElementsLepidodendronMod.ModElement {
 	public void generateWorld(Random random, int chunkX, int chunkZ, World world, int dimID, IChunkGenerator cg, IChunkProvider cp) {
 
 		boolean biomeCriteria = false;
-		Biome biome = world.getBiome(new BlockPos(chunkX + 16, 0, chunkZ + 16));
+		Biome biome = world.getBiome(new BlockPos(chunkX + 15, 0, chunkZ + 15));
 		if (!matchBiome(biome, LepidodendronConfigPlants.genMossWoodBlacklistBiomes)) {
 			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST))
 				biomeCriteria = true;
@@ -126,7 +126,7 @@ public class BlockAncientMoss extends ElementsLepidodendronMod.ModElement {
 		if (biome instanceof BiomeTriassic)
 		{
 			BiomeTriassic biomeTriassic = (BiomeTriassic) biome;
-			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.Cool) {
+			if (biomeTriassic.getBiomeType() == EnumBiomeTypeTriassic.SouthAmericaAusAnt) {
 				biomeCriteria = true;
 			}
 			else {
@@ -906,9 +906,9 @@ public class BlockAncientMoss extends ElementsLepidodendronMod.ModElement {
 		public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 			if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Moss");
-				tooltip.add("Periods: Silurian (?) - Devonian (?) - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [- present]");
-				tooltip.add("Note: spreads to surrounding blocks.");
-				tooltip.add("Propagation: spores");}
+				tooltip.add("Periods: Silurian (?) - Devonian (?) - Carboniferous - Permian - Triassic - Jurassic - Early Cretaceous - Late Cretaceous - Paleogene - Neogene - Pleistocene [ - present]");
+				tooltip.add("Note: Spreads to surrounding blocks.");
+				tooltip.add("Propagation: Spores");}
 			super.addInformation(stack, player, tooltip, advanced);
 		}
 

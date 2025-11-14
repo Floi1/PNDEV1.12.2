@@ -315,11 +315,11 @@ public class BlockAsteroxylon extends ElementsLepidodendronMod.ModElement {
 				return false;
 			}
 
-	    	double getLight = worldIn.getLight(pos);
-	    	if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
-	    	{
-	    		return false;
-	    	}
+//	    	double getLight = worldIn.getLight(pos);
+//	    	if (!worldIn.canSeeSky(pos) && (worldIn.isDaytime()) && (getLight < 7))
+//	    	{
+//	    		return false;
+//	    	}
 			
 			int distH = (int) LepidodendronConfigPlants.waterAsteroxylonHorizontal;
 			if (distH < 1) distH = 1;
@@ -356,9 +356,9 @@ public class BlockAsteroxylon extends ElementsLepidodendronMod.ModElement {
 	    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
 	        if (LepidodendronConfig.showTooltips) {
 				tooltip.add("Type: Lycophyte plant");
-	        tooltip.add("Periods: Devonian");
-	        tooltip.add("Note: requires water proximity and spreads to surrounding sand and dirt");
-	        tooltip.add("Propagation: spores");}
+	        tooltip.add("Periods: Early Devonian");
+	        tooltip.add("Note: Requires water proximity and spreads to surrounding sand and dirt");
+	        tooltip.add("Propagation: Spores");}
 	        super.addInformation(stack, player, tooltip, advanced);
 	    }
 

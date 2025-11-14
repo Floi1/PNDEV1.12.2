@@ -1,6 +1,5 @@
 package net.lepidodendron.entity;
 
-import net.lepidodendron.LepidodendronConfig;
 import net.lepidodendron.block.BlockGuano;
 import net.lepidodendron.block.BlockGuanoBlock;
 import net.lepidodendron.item.ItemGuanoBall;
@@ -103,7 +102,8 @@ public class EntityPrehistoricFloraGuanoBall extends EntityThrowable
             }
 
             boolean added = false;
-            boolean blockable = (world.getGameRules().getBoolean("mobGriefing") && LepidodendronConfig.doGuanoGriefing);
+            //boolean blockable = (world.getGameRules().getBoolean("mobGriefing") && LepidodendronConfig.doGuanoGriefing);
+            boolean blockable = true; //This is always ok - like how snow is
 
             if (blockHit == BlockGuano.block) { //Add to layers
                 int i = ((Integer) iblockstate.getValue(BlockSnow.LAYERS)).intValue();

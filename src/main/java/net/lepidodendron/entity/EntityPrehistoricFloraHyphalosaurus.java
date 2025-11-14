@@ -79,7 +79,7 @@ public class EntityPrehistoricFloraHyphalosaurus extends EntityPrehistoricFloraS
 
 	@Override
 	public boolean isSmall() {
-		return getAgeScale() < 0.80;
+		return true;
 	}
 
 
@@ -186,7 +186,7 @@ public class EntityPrehistoricFloraHyphalosaurus extends EntityPrehistoricFloraS
 
 
 	protected void initEntityAI() {
-		tasks.addTask(0, new EntityMateAIAgeableBase(this, 1.0D));
+		tasks.addTask(0, new EntityMateAI(this, 1.0D));
 		tasks.addTask(1, new EntityTemptAI(this, 1, false, true, 1F));
 		tasks.addTask(2, new AttackAI(this, 1.0D, false, this.getAttackLength()));
 		tasks.addTask(3, new AmphibianWanderNestInBlockAI(this));
@@ -249,21 +249,11 @@ public class EntityPrehistoricFloraHyphalosaurus extends EntityPrehistoricFloraS
 				.getObject(new ResourceLocation("lepidodendron:hyphalosaurus_hurt"));
 	}
 
-	//@Override
-	//public SoundEvent getHurtSound(DamageSource ds) {
-	//	return (SoundEvent) SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.generic.hurt"));
-	//}
-
 	@Override
 	public SoundEvent getDeathSound() {
 		return (SoundEvent) SoundEvent.REGISTRY
 				.getObject(new ResourceLocation("lepidodendron:hyphalosaurus_death"));
 	}
-
-	//@Override
-	//public SoundEvent getDeathSound() {
-	//	return (SoundEvent) SoundEvent.REGISTRY.getObject(new ResourceLocation("entity.generic.death"));
-	//}
 
 	@Override
 	protected float getSoundVolume() {

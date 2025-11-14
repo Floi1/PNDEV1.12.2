@@ -359,20 +359,20 @@ public class ModelShantungosuchus extends ModelBasePalaeopedia {
         animate((IAnimatedEntity) entity, f, f1, f2, f3, f4, f5);
         this.main.render(f5);
     }
-
     @Override
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
-        this.main.offsetY = -1.0F;
-        this.main.offsetX = 0.438F;
-        this.main.rotateAngleY = (float)Math.toRadians(225);
-        this.main.rotateAngleX = (float)Math.toRadians(8);
-        this.main.rotateAngleZ = (float)Math.toRadians(-8);
+        this.main.offsetY = -0.2F;
+        this.main.offsetX = 0.8F;
+        this.main.offsetZ = 2.0F;
+        this.main.rotateAngleY = (float)Math.toRadians(120);
+        this.main.rotateAngleX = (float)Math.toRadians(0);
+        this.main.rotateAngleZ = (float)Math.toRadians(0);
         this.main.scaleChildren = true;
-        float scaler = 2.63F;
+        float scaler = 3.0F;
         this.main.setScale(scaler, scaler, scaler);
         //Start of pose:
-
+        this.setRotateAngle(main, 0.0F, 3.8F, -0.0F);
         //End of pose, now render the model:
         this.main.render(f);
         //Reset rotations, positions and sizing:
@@ -444,6 +444,7 @@ public class ModelShantungosuchus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.eye.setScale(1,1,1);
         EntityPrehistoricFloraShantungosuchus ee = (EntityPrehistoricFloraShantungosuchus) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {
@@ -2686,7 +2687,7 @@ public class ModelShantungosuchus extends ModelBasePalaeopedia {
             animator.startKeyframe(5);
             animator.rotate(this.body3, (float) Math.toRadians(8), (float) Math.toRadians(0), (float) Math.toRadians(0));
             animator.rotate(this.head, (float) Math.toRadians(-5), (float) Math.toRadians(0), (float) Math.toRadians(0));
-            animator.rotate(this.jaw, (float) -Math.toRadians(36), (float) Math.toRadians(0), (float) Math.toRadians(0));
+            animator.rotate(this.jaw, (float) Math.toRadians(36), (float) Math.toRadians(0), (float) Math.toRadians(0));
             animator.endKeyframe();
             animator.setStaticKeyframe(5);
             animator.startKeyframe(2);

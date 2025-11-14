@@ -412,6 +412,8 @@ public class ModelGermanodactylus extends ModelBasePalaeopedia {
         this.cube_r17.cubeList.add(new ModelBox(cube_r17, 35, 10, -1.0F, -1.025F, -1.575F, 2, 1, 3, 0.0F, false));
 
 
+        this.wing1left.scaleChildren = true;
+        this.wing1right.scaleChildren = true;
         this.leftmembranetip.scaleChildren = true;
         this.rightmembranetip.scaleChildren = true;
 
@@ -452,16 +454,16 @@ public class ModelGermanodactylus extends ModelBasePalaeopedia {
     @Override
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
-        this.root.offsetY = -2.5F;
-        this.root.offsetX = -0.37F;
+        this.root.offsetY = -2.2F;
+        this.root.offsetX = 0.2F;
         this.root.rotateAngleY = (float)Math.toRadians(130);
         this.root.rotateAngleX = (float)Math.toRadians(0);
         this.root.rotateAngleZ = (float)Math.toRadians(0);
         this.root.scaleChildren = true;
-        float scaler = 1.58F;
+        float scaler = 2.2F;
         this.root.setScale(scaler, scaler, scaler);
         //Start of pose:
-
+        this.setRotateAngle(root, 0.2F, 3.8F, -0.0F);
         //End of pose, now render the model:
         this.root.render(f);
         //Reset rotations, positions and sizing:
@@ -533,6 +535,8 @@ public class ModelGermanodactylus extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.wing1left.setScale(1,1,1);
+        this.wing1right.setScale(1,1,1);
         EntityPrehistoricFloraGermanodactylus ee = (EntityPrehistoricFloraGermanodactylus) entitylivingbaseIn;
 
         if (ee.isReallyFlying() || ee.getAnimation() == ee.UNFLY_ANIMATION) {

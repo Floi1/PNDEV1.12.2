@@ -40,7 +40,7 @@ public abstract class EntityPrehistoricFloraAgeableFishBase extends EntityPrehis
     @Override
     public float getEyeHeight() {
         if (this.height >= 0.85) {
-            return 0.333F;
+            return this.height * 0.7F;
         }
         return super.getEyeHeight();
     }
@@ -214,7 +214,7 @@ public abstract class EntityPrehistoricFloraAgeableFishBase extends EntityPrehis
     public void travel(float strafe, float vertical, float forward) {
         float f4;
         if (this.isServerWorld()) {
-            if (isInWater()) {
+            if (isReallyInWater()) {
                 this.moveRelative(strafe, vertical, forward, 0.1F);
                 f4 = 0.8F;
                 float speedModifier = (float) EnchantmentHelper.getDepthStriderModifier(this);

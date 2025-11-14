@@ -665,13 +665,13 @@ public class ModelFalcarius extends ModelBasePalaeopedia {
     @Override
     public void renderStaticBook(float f) {
         //Rotations, positions and sizing:
-        this.root.offsetY = 0.700F;
+        this.root.offsetY = 0.7F;
         this.root.offsetX = 0.0F;
         this.root.rotateAngleY = (float)Math.toRadians(225);
         this.root.rotateAngleX = (float)Math.toRadians(-2);
         this.root.rotateAngleZ = (float)Math.toRadians(3);
         this.root.scaleChildren = true;
-        float scaler = 0.45F;
+        float scaler = 0.4F;
         this.root.setScale(scaler, scaler, scaler);
         //Start of pose:
         
@@ -756,6 +756,8 @@ public class ModelFalcarius extends ModelBasePalaeopedia {
     public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTickTime) {
         super.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTickTime);
         this.resetToDefaultPose();
+        this.lefteye.setScale(1,1,1);
+        this.righteye.setScale(1,1,1);
         EntityPrehistoricFloraFalcarius ee = (EntityPrehistoricFloraFalcarius) entitylivingbaseIn;
 
         if (!ee.isReallyInWater()) {

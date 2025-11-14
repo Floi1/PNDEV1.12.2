@@ -9,7 +9,7 @@
 			"trigger": "lepidodendron:pf_adv_book_pambikalbae",
 			"title": "Pambikalbae",
 			"type": "quest",
-			"text": "$(l)Temporal Range:$() Neoproterozoic (Ediacaran)$(br2)$(l)Habitat:$() Marine$(br2)>Cnidaria/Petalonamae(?)"
+			"text": "$(l)Temporal Range:$() Neoproterozoic (Ediacaran)$(br2)$(l)Habitat:$() Shallow Marine$(br2)>$(o)Cnidaria/Petalonamae (?)"
 		},
 		{
 			"type": "multiblock",
@@ -29,7 +29,7 @@
 		{
 			"advancement": "lepidodendron:pf_adv_book_pambikalbae",
 			"type": "text",
-			"text": "Pambikalbae hasenohrae comes from the Upper Ediacaran, with fossils found in the Flinders Ranges, South Australia. It is a frondose lifeform found in shallow waters and could grow up to 30 cm in height, and may have partook in suspension feeding from the surrounding water."
+			"text": "Pambikalbae hasenohrae comes from the late Ediacaran, with fossils found in the Flinders Ranges, South Australia. It is a frondose lifeform found in shallow waters and could grow up to 30 cm in height, and may have partook in suspension feeding from the surrounding water."
 		},
 		{
 			"advancement": "lepidodendron:pf_adv_book_pambikalbae",
